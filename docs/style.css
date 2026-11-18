@@ -208,6 +208,12 @@ h1 em {
   overflow: hidden;
   transition: border-color 0.15s ease;
 }
+.shot.portrait {
+  width: 70px;
+  height: 108px;
+  justify-self: start;
+  background: #0b1220;
+}
 .shot img {
   width: 100%;
   height: 100%;
@@ -215,6 +221,7 @@ h1 em {
   object-position: top center;
   transition: transform 0.2s ease;
 }
+.shot.portrait img { object-fit: contain; }
 .entry:hover .shot { border-color: var(--accent); }
 .entry:hover .shot img { transform: scale(1.025); }
 .shot img.pos-phone { object-position: center 22%; }
@@ -277,6 +284,7 @@ h1 em {
 @media (max-width: 760px) {
   .list-head, .entry { grid-template-columns: 28px 1fr 120px 20px; gap: 14px; }
   .shot { width: 120px; height: 76px; }
+  .shot.portrait { width: 54px; height: 76px; }
   .copy h2 { font-size: 1.25rem; }
   .copy p { font-size: 0.84rem; }
   .site-footer .container { display: block; }
@@ -287,12 +295,14 @@ h1 em {
   .brand span { display: none; }
   .list-head { display: none; }
   .entry {
-    grid-template-columns: 24px 1fr 72px 18px;
+    grid-template-columns: 24px 1fr 60px 18px;
     gap: 10px;
     padding: 18px 0;
   }
-  .shot { width: 72px; height: 56px; }
-  .copy p { display: none; }
+  .shot { width: 60px; height: 40px; }
+  .shot.portrait { width: 44px; height: 64px; }
+  .copy h2 { font-size: 1.1rem; }
+  .copy p { display: block; font-size: 0.78rem; line-height: 1.45; }
   h1 { font-size: clamp(2rem, 10vw, 2.6rem); }
 }
 
