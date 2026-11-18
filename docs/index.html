@@ -9,6 +9,32 @@
 <meta name="color-scheme" content="light">
 <link rel="canonical" href="https://noelbennettz.github.io/">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<script>
+(function () {
+  var root = document.documentElement;
+  try {
+    var saved = localStorage.getItem("theme");
+    root.dataset.theme = saved ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  } catch (e) { root.dataset.theme = "light"; }
+  document.addEventListener("DOMContentLoaded", function () {
+    var btn = document.querySelector(".theme-toggle");
+    if (!btn) return;
+    function render() {
+      var dark = root.dataset.theme === "dark";
+      btn.textContent = dark ? "Light" : "Dark";
+      btn.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+      btn.setAttribute("aria-pressed", dark ? "true" : "false");
+    }
+    btn.addEventListener("click", function () {
+      root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+      try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+      render();
+    });
+    render();
+  });
+})();
+</script>
 <link rel="stylesheet" href="style.css">
 <meta property="og:type" content="website">
 <meta property="og:title" content="noelbennettz — tools for private networks">
@@ -28,6 +54,7 @@
     </a>
     <nav class="nav" aria-label="Main">
       <a href="https://github.com/noelbennettz">GitHub ↗</a>
+      <button class="theme-toggle" type="button" aria-pressed="false">Dark</button>
     </nav>
   </div>
 </header>
@@ -55,7 +82,7 @@
     <span></span>
   </div>
 
-  <a class="entry" href="https://noelbennettz.github.io/Hy2droid/" style="--accent:#5f8f00">
+  <a class="entry hy2" href="https://noelbennettz.github.io/Hy2droid/">
     <span class="num">01</span>
     <span class="copy">
       <h2>Hy2droid</h2>
@@ -66,7 +93,7 @@
     <span class="arrow" aria-hidden="true">↗</span>
   </a>
 
-  <a class="entry" href="https://noelbennettz.github.io/amneziawg-ui/" style="--accent:#c25a00">
+  <a class="entry amnezia" href="https://noelbennettz.github.io/amneziawg-ui/">
     <span class="num">02</span>
     <span class="copy">
       <h2>AmneziaWG Web UI</h2>
@@ -77,7 +104,7 @@
     <span class="arrow" aria-hidden="true">↗</span>
   </a>
 
-  <a class="entry" href="https://noelbennettz.github.io/imail/" style="--accent:#1f5fd0">
+  <a class="entry imail" href="https://noelbennettz.github.io/imail/">
     <span class="num">03</span>
     <span class="copy">
       <h2>iMail</h2>
