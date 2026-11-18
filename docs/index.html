@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>noelbennettz — tools for private networks</title>
 <meta name="description" content="An index of open-source projects: Hy2droid (Hysteria 2 for Android), AmneziaWG Web UI (self-hosted Docker panel) and iMail (mail server for your own domains).">
-<meta name="theme-color" content="#f4f2ec">
+<meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e0e10" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
+<link rel="alternate" hreflang="zh-Hant" href="zh.html">
 <link rel="canonical" href="https://noelbennettz.github.io/">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <script>
@@ -55,6 +57,7 @@
     <nav class="nav" aria-label="Main">
       <a href="https://github.com/noelbennettz">GitHub ↗</a>
       <button class="theme-toggle" type="button" aria-pressed="false">Dark</button>
+      <a href="zh.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
     </nav>
   </div>
 </header>
@@ -64,12 +67,13 @@
 <section class="intro container">
   <div>
     <p class="kicker">Open source / <b>three projects</b></p>
-    <h1>Tools for<br><em>private networks.</em></h1>
+    <h1>Software for<br><em>your own network.</em></h1>
   </div>
   <p class="lede">
     An Android Hysteria 2 client, a self-hosted AmneziaWG panel, and a mail
-    server for your own domains. Each site has its own character; all of the
-    software is open source.
+    server for your own domains. You run them on hardware you control; the
+    source is on GitHub under AGPL-3.0, and each project page states what it
+    needs before you start.
   </p>
 </section>
 
@@ -86,7 +90,7 @@
     <span class="num">01</span>
     <span class="copy">
       <h2>Hy2droid</h2>
-      <p>A native Hysteria 2 client for Android. Paste a link or scan a QR, connect a full tunnel over IPv4 or IPv6, and browse — no root, no Google Play Services.</p>
+      <p>A native Hysteria 2 client for Android. Paste a link or scan a QR, connect a full tunnel over IPv4 or IPv6, and browse. Needs Android 11 or newer and a Hysteria 2 server; no root and no Google Play Services.</p>
     </span>
     <span class="stack">Android<br>Kotlin<br>AGPL-3.0</span>
     <span class="shot portrait"><img class="pos-phone" src="assets/shot-hy2droid.png" alt="Hy2droid home screen" width="70" height="108" loading="lazy"></span>
@@ -97,7 +101,7 @@
     <span class="num">02</span>
     <span class="copy">
       <h2>AmneziaWG Web UI</h2>
-      <p>A self-hosted AmneziaWG 3.1 panel in one ~35 MB Docker image: servers, clients, .conf and vpn:// exports, QR codes and live traffic.</p>
+      <p>A self-hosted AmneziaWG 3.1 panel in one ~35 MB Docker image: servers, clients, .conf and vpn:// exports, QR codes and live traffic. Needs a Linux host with Docker, Compose 2.24 or newer and a public IPv4 address.</p>
     </span>
     <span class="stack">Self-hosted<br>Docker · Go<br>AGPL-3.0</span>
     <span class="shot"><img class="pos-dash" src="assets/shot-amneziawg.png" alt="AmneziaWG Web UI dashboard" width="180" height="108" loading="lazy"></span>
@@ -108,7 +112,7 @@
     <span class="num">03</span>
     <span class="copy">
       <h2>iMail</h2>
-      <p>A mail server for your own domains in one Go binary: SMTP, IMAPS and POP3S, a browser mailbox, an admin console and per-domain certificates.</p>
+      <p>A mail server for your own domains in one Go binary: SMTP, IMAPS and POP3S, a browser mailbox, an admin console and per-domain certificates. Needs Docker, a domain whose DNS you control, and port 25 open at your provider.</p>
     </span>
     <span class="stack">Mail<br>Go · Docker<br>AGPL-3.0</span>
     <span class="shot"><img class="pos-login" src="assets/shot-imail.png" alt="iMail sign-in page" width="180" height="108" loading="lazy"></span>
@@ -121,9 +125,9 @@
 <footer class="site-footer">
   <div class="container">
     <p>
-      Static sites; the software is self-hosted or sideloaded. Source, issues
-      and releases live on GitHub. Third-party licences are listed in each
-      project.
+      Static pages. The software is self-hosted or sideloaded, and the source,
+      issues and releases live on GitHub. Third-party licences are listed in
+      each project.
     </p>
     <nav aria-label="Footer">
       <a href="https://github.com/noelbennettz">GitHub</a>

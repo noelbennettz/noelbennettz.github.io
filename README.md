@@ -8,4 +8,5 @@ projects and their sites:
 - [iMail](https://noelbennettz.github.io/imail/) — mail for your own domains
 
 The site is plain HTML/CSS in `docs/`, deployed to GitHub Pages by
-`.github/workflows/pages.yml`.
+`.github/workflows/pages.yml`. `index.html` is English and `zh.html` is
+Traditional Chinese; each links to the other.

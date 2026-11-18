@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>noelbennettz — 自架網路工具</title>
+<meta name="description" content="三個開源專案的索引：Hy2droid（Android 的 Hysteria 2 用戶端）、AmneziaWG Web UI（自架 Docker 面板）與 iMail（自有網域的郵件伺服器）。">
+<meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e0e10" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="alternate" hreflang="en" href="index.html">
+<link rel="canonical" href="https://noelbennettz.github.io/zh.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<script>
+(function () {
+  var root = document.documentElement;
+  try {
+    var saved = localStorage.getItem("theme");
+    root.dataset.theme = saved ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  } catch (e) { root.dataset.theme = "light"; }
+  document.addEventListener("DOMContentLoaded", function () {
+    var btn = document.querySelector(".theme-toggle");
+    if (!btn) return;
+    function render() {
+      var dark = root.dataset.theme === "dark";
+      btn.textContent = dark ? "日間" : "夜間";
+      btn.setAttribute("aria-label", dark ? "切換日間模式" : "切換夜間模式");
+      btn.setAttribute("aria-pressed", dark ? "true" : "false");
+    }
+    btn.addEventListener("click", function () {
+      root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+      try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+      render();
+    });
+    render();
+  });
+})();
+</script>
+<link rel="stylesheet" href="style.css">
+<meta property="og:type" content="website">
+<meta property="og:title" content="noelbennettz — 自架網路工具">
+<meta property="og:description" content="Android 的 Hysteria 2 用戶端、自架的 AmneziaWG 面板，以及自有網域的郵件伺服器。">
+<meta property="og:url" content="https://noelbennettz.github.io/zh.html">
+<meta property="og:image" content="https://noelbennettz.github.io/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<a class="skip" href="#main">跳到內容</a>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="./">
+      <img src="assets/favicon.svg" alt="" width="24" height="24">
+      noelbennettz <span>Index</span>
+    </a>
+    <nav class="nav" aria-label="主要導覽">
+      <a href="https://github.com/noelbennettz">GitHub ↗</a>
+      <button class="theme-toggle" type="button" aria-pressed="false">夜間</button>
+      <a href="index.html" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="intro container">
+  <div>
+    <p class="kicker">開源 / <b>三個專案</b></p>
+    <h1>自己網路上的<br><em>軟體。</em></h1>
+  </div>
+  <p class="lede">
+    Android 的 Hysteria 2 用戶端、自架的 AmneziaWG 面板，以及自有網域的郵件伺服器。
+    都跑在自己控制的機器上；原始碼在 GitHub、授權 AGPL-3.0，各專案頁面會先說清楚需要準備什麼。
+  </p>
+</section>
+
+<section class="list container" aria-label="專案">
+  <div class="list-head">
+    <span>編號</span>
+    <span>專案</span>
+    <span>技術</span>
+    <span>官網</span>
+    <span></span>
+  </div>
+
+  <a class="entry hy2" href="https://noelbennettz.github.io/Hy2droid/zh.html">
+    <span class="num">01</span>
+    <span class="copy">
+      <h2>Hy2droid</h2>
+      <p>Android 原生的 Hysteria 2 用戶端。貼上連結或掃 QR，就能走 IPv4 或 IPv6 的全通道上網。需要 Android 11 以上與一台 Hysteria 2 伺服器；不用 root，也不需要 Google Play 服務。</p>
+    </span>
+    <span class="stack">Android<br>Kotlin<br>AGPL-3.0</span>
+    <span class="shot portrait"><img class="pos-phone" src="assets/shot-hy2droid.png" alt="Hy2droid 首頁" width="70" height="108" loading="lazy"></span>
+    <span class="arrow" aria-hidden="true">↗</span>
+  </a>
+
+  <a class="entry amnezia" href="https://noelbennettz.github.io/amneziawg-ui/zh.html">
+    <span class="num">02</span>
+    <span class="copy">
+      <h2>AmneziaWG Web UI</h2>
+      <p>自架的 AmneziaWG 3.1 面板，單一約 35 MB 的 Docker image：伺服器、用戶端、.conf 與 vpn:// 匯出、QR 與即時流量。需要一台裝好 Docker、Compose 2.24 以上的 Linux 主機和對外 IPv4。</p>
+    </span>
+    <span class="stack">自架<br>Docker · Go<br>AGPL-3.0</span>
+    <span class="shot"><img class="pos-dash" src="assets/shot-amneziawg.png" alt="AmneziaWG Web UI 儀表板" width="180" height="108" loading="lazy"></span>
+    <span class="arrow" aria-hidden="true">↗</span>
+  </a>
+
+  <a class="entry imail" href="https://noelbennettz.github.io/imail/zh.html">
+    <span class="num">03</span>
+    <span class="copy">
+      <h2>iMail</h2>
+      <p>自有網域的郵件伺服器，單一 Go binary：SMTP、IMAPS、POP3S、瀏覽器信箱、管理台與逐網域憑證。需要 Docker、可控制 DNS 的網域，以及供應商沒有封鎖的 25 埠。</p>
+    </span>
+    <span class="stack">郵件<br>Go · Docker<br>AGPL-3.0</span>
+    <span class="shot"><img class="pos-login" src="assets/shot-imail.png" alt="iMail 登入頁" width="180" height="108" loading="lazy"></span>
+    <span class="arrow" aria-hidden="true">↗</span>
+  </a>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>
+      純靜態頁面。軟體自己架或自己側載，原始碼、issue 與發佈都在 GitHub；
+      第三方授權列在各專案裡。
+    </p>
+    <nav aria-label="頁尾">
+      <a href="https://github.com/noelbennettz">GitHub</a>
+      <a href="https://github.com/noelbennettz/Hy2droid">Hy2droid</a>
+      <a href="https://github.com/noelbennettz/amneziawg-ui">AmneziaWG UI</a>
+      <a href="https://github.com/noelbennettz/imail">iMail</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>
