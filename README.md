@@ -7,6 +7,6 @@ projects and their sites:
 - [AmneziaWG Web UI](https://noelbennettz.github.io/amneziawg-ui/) — self-hosted Docker panel
 - [iMail](https://noelbennettz.github.io/imail/) — mail for your own domains
 
-The site is plain HTML/CSS in `docs/`, deployed to GitHub Pages by
-`.github/workflows/pages.yml`. `index.html` is English and `zh.html` is
-Traditional Chinese; each links to the other.
+The site is plain HTML/CSS in `docs/` — English and Traditional Chinese, each
+page linking to the other — deployed to GitHub Pages by
+`.github/workflows/pages.yml`.
