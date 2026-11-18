@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>noelbennettz — 自架網路工具</title>
+<title>noelbennettz — 開源網路軟體</title>
 <meta name="description" content="三個開源專案的索引：Hy2droid（Android 的 Hysteria 2 用戶端）、AmneziaWG Web UI（自架 Docker 面板）與 iMail（自有網域的郵件伺服器）。">
 <meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e0e10" media="(prefers-color-scheme: dark)">
@@ -39,7 +39,7 @@
 </script>
 <link rel="stylesheet" href="style.css">
 <meta property="og:type" content="website">
-<meta property="og:title" content="noelbennettz — 自架網路工具">
+<meta property="og:title" content="noelbennettz — 開源網路軟體">
 <meta property="og:description" content="Android 的 Hysteria 2 用戶端、自架的 AmneziaWG 面板，以及自有網域的郵件伺服器。">
 <meta property="og:url" content="https://noelbennettz.github.io/zh.html">
 <meta property="og:image" content="https://noelbennettz.github.io/assets/og.png">
@@ -88,7 +88,7 @@
     <span class="num">01</span>
     <span class="copy">
       <h2>Hy2droid</h2>
-      <p>Android 原生的 Hysteria 2 用戶端。貼上連結或掃 QR，就能走 IPv4 或 IPv6 的全通道上網。需要 Android 11 以上與一台 Hysteria 2 伺服器；不用 root，也不需要 Google Play 服務。</p>
+      <p>一個 Android App：把這台手機連到你自己的（或別人給你分享連結的）Hysteria 2 伺服器。貼上連結或掃 QR 碼，手機的上網流量就從那台伺服器出去。需要 Android 11 以上；不用 root，也不用 Google 帳號。</p>
     </span>
     <span class="stack">Android<br>Kotlin<br>AGPL-3.0</span>
     <span class="shot portrait"><img class="pos-phone" src="assets/shot-hy2droid.png" alt="Hy2droid 首頁" width="70" height="108" loading="lazy"></span>
@@ -99,7 +99,7 @@
     <span class="num">02</span>
     <span class="copy">
       <h2>AmneziaWG Web UI</h2>
-      <p>自架的 AmneziaWG 3.1 面板，單一約 35 MB 的 Docker image：伺服器、用戶端、.conf 與 vpn:// 匯出、QR 與即時流量。需要一台裝好 Docker、Compose 2.24 以上的 Linux 主機和對外 IPv4。</p>
+      <p>用網頁管理自家 AmneziaWG VPN 伺服器，整包是一個約 35 MB 的 Docker image：開伺服器與用戶端、匯出 .conf／QR／vpn:// 連結、看即時流量。需要一台裝好 Docker、Compose 2.24 以上的 Linux 主機和對外 IPv4。</p>
     </span>
     <span class="stack">自架<br>Docker · Go<br>AGPL-3.0</span>
     <span class="shot"><img class="pos-dash" src="assets/shot-amneziawg.png" alt="AmneziaWG Web UI 儀表板" width="180" height="108" loading="lazy"></span>
@@ -110,7 +110,7 @@
     <span class="num">03</span>
     <span class="copy">
       <h2>iMail</h2>
-      <p>自有網域的郵件伺服器，單一 Go binary：SMTP、IMAPS、POP3S、瀏覽器信箱、管理台與逐網域憑證。需要 Docker、可控制 DNS 的網域，以及供應商沒有封鎖的 25 埠。</p>
+      <p>自有網域的郵件伺服器：SMTP、IMAPS、POP3S、瀏覽器信箱、管理台與逐網域憑證。需要 Docker、一個你能控制 DNS 的網域，以及供應商沒有封鎖的 25 埠。</p>
     </span>
     <span class="stack">郵件<br>Go · Docker<br>AGPL-3.0</span>
     <span class="shot"><img class="pos-login" src="assets/shot-imail.png" alt="iMail 登入頁" width="180" height="108" loading="lazy"></span>
