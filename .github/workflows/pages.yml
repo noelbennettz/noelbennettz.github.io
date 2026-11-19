@@ -11,7 +11,10 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  # A workflow_dispatch run from before the migration has been stuck in GitHub's
+  # queue under the old "pages" group. A distinct group lets current deploys run
+  # instead of waiting behind it; cancel-in-progress still supersedes our own.
+  group: pages-deploy
   cancel-in-progress: true
 
 jobs:
