@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hy2droid — a Hysteria 2 client for Android</title>
+<meta name="description" content="Hy2droid is a free, open-source Hysteria 2 client for Android. Paste a share link or scan a QR code and the phone's traffic goes out through your own server over IPv4 or IPv6, with no root and no Google Play Services.">
+<meta name="theme-color" content="#070907">
+<meta name="color-scheme" content="dark light">
+<link rel="canonical" href="https://noelbennettz.github.io/Hy2droid/">
+<link rel="alternate" hreflang="zh-Hant" href="zh.html">
+<link rel="icon" href="assets/icon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/icon.png">
+<script>
+(function () {
+  var root = document.documentElement;
+  var zh = root.lang.indexOf("zh") === 0;
+  try {
+    var saved = localStorage.getItem("theme");
+    root.dataset.theme = saved ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  } catch (e) { root.dataset.theme = "dark"; }
+  document.addEventListener("DOMContentLoaded", function () {
+    var btn = document.querySelector(".theme-toggle");
+    if (!btn) return;
+    function render() {
+      var dark = root.dataset.theme === "dark";
+      btn.textContent = dark ? (zh ? "日間" : "Light") : (zh ? "夜間" : "Dark");
+      btn.setAttribute("aria-label",
+        dark ? (zh ? "切換日間模式" : "Switch to light mode")
+             : (zh ? "切換夜間模式" : "Switch to dark mode"));
+      btn.setAttribute("aria-pressed", dark ? "true" : "false");
+    }
+    btn.addEventListener("click", function () {
+      root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+      try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+      render();
+    });
+    render();
+  });
+})();
+</script>
+<link rel="stylesheet" href="style.css">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hy2droid — a Hysteria 2 client for Android">
+<meta property="og:description" content="Paste a hysteria2:// link, scan a QR, connect. Full tunnel, IPv4 + IPv6, no root, no Google Play Services.">
+<meta property="og:url" content="https://noelbennettz.github.io/Hy2droid/">
+<meta property="og:image" content="https://noelbennettz.github.io/Hy2droid/assets/screenshot-home.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="./">
+      <img src="assets/icon.png" alt="" width="30" height="30">
+      Hy2droid
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a class="hide-sm" href="#features">Features</a>
+      <a class="hide-sm" href="#ipv6">Addresses</a>
+      <a class="nav-install" href="#install">Install</a>
+      <a class="hide-sm" href="https://github.com/noelbennettz/Hy2droid">GitHub</a>
+      <button class="theme-toggle" type="button" aria-pressed="false">Dark</button>
+      <a class="lang" href="zh.html" hreflang="zh-Hant" lang="zh-Hant">繁中</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero">
+  <div class="container">
+    <div>
+      <p class="eyebrow"><span class="dot"></span>Hysteria 2 / Android 11+ / no root</p>
+      <h1>Your own server,<br><span class="grad">on your phone.</span></h1>
+      <p class="lede">
+        Hy2droid is an Android app that connects the phone to a server running
+        Hysteria 2, a protocol for getting around blocked or throttled networks.
+        It is only the phone side: the server address — a share link or a QR
+        code — comes from whoever runs that server. Once connected, the traffic
+        of your apps leaves through it. Needs Android 11 or newer; no root, no
+        Google account, no configuration file.
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://github.com/noelbennettz/Hy2droid/releases/latest/download/app-arm64-v8a-release.apk" data-asset="arm64">
+          ↓ Download APK
+        </a>
+        <a class="btn" href="https://github.com/noelbennettz/Hy2droid">Source ↗</a>
+      </div>
+      <div class="pills">
+        <span class="pill">Android 11+</span>
+        <span class="pill">IPv4 + IPv6</span>
+        <span class="pill">No root</span>
+        <span class="pill">AGPL-3.0</span>
+        <span class="pill"><span id="release-version">latest</span> · <span id="release-date">releases</span></span>
+      </div>
+    </div>
+    <div class="hero-art">
+      <div class="phone back">
+        <img src="assets/screenshot-settings.png" width="1080" height="2400" loading="lazy" alt="Settings screen with network controls">
+      </div>
+      <div class="phone front">
+        <img src="assets/screenshot-home.png" width="1080" height="2400" alt="Home screen showing a connected tunnel and saved profiles">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <div class="section-head">
+      <h2>What it does</h2>
+      <p>Add a server, press connect, and the phone's internet traffic leaves
+        through it. The home screen shows whether the connection is up, how much
+        data has moved, and — when it fails — which step failed.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <h3>Add a server</h3>
+        <p>Paste a <code>hysteria2://</code> link, scan a QR code with the camera (no network involved), or open a link in the browser and let it hand the server to the app. The app calls each saved server a profile. Switching servers while connected rebuilds the connection.</p>
+      </article>
+      <article class="card">
+        <h3>IPv4 and IPv6</h3>
+        <p>The connection carries both kinds of address. The server field takes a hostname or an address, and the port has its own field.</p>
+      </article>
+      <article class="card">
+        <h3>Choose apps</h3>
+        <p>Pick apps that should not use the connection. On Android 13 and newer, local-network traffic can stay local, so printers, NAS boxes and casting keep working.</p>
+      </article>
+      <article class="card">
+        <h3>Errors say what failed</h3>
+        <p>When a connection fails, the status card says what failed: the name did not resolve, TLS failed, the password was rejected, or nothing came back. Diagnostics can add a test and a redacted log export.</p>
+      </article>
+      <article class="card">
+        <h3>No account, no tracking</h3>
+        <p>Servers you add stay in the app's private storage. There is no account, no analytics, no crash reporting and no update check.</p>
+      </article>
+      <article class="card">
+        <h3>Known limits</h3>
+        <p>Hysteria 2 only. One server is one share link: no subscription URL, and no in-app updates — new versions come from Releases. The default name lookup returns IPv4 addresses only, so IPv6-only sites need “Answer DNS in the tunnel” turned off. The app blocks QUIC (the transport HTTP/3 uses, on UDP port 443) by default; the Blocked traffic screen changes that.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="screens">
+  <div class="container">
+    <div class="section-head">
+      <h2>Screens</h2>
+      <p>The whole app is two screens: the status and your saved servers, and the
+        settings behind the gear.</p>
+    </div>
+    <div class="shots">
+      <figure>
+        <img src="assets/screenshots/s1.png" width="1080" height="2400" loading="lazy" alt="Home screen: a Connected status card naming the profile Home, above a Profiles list where Home is marked In use with a 2248 ms latency reading, and the power and add-profile buttons at the bottom right.">
+        <figcaption>Home: whether the tunnel is up, which server it uses, and how long that server takes to answer.</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/screenshots/s2.png" width="1080" height="2400" loading="lazy" alt="Settings screen: an Appearance section with Dynamic color, Show server address and Live traffic, then a Network section with Split tunneling, Blocked traffic, Bypass local network and Tunnel MTU, under the note that changes apply the next time you connect.">
+        <figcaption>Settings: appearance, then the network options that take effect on the next connect.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="ipv6">
+  <div class="container">
+    <div class="section-head">
+      <h2>Server addresses</h2>
+      <p>A server field that takes a hostname, an IPv4 address or an IPv6 address,
+        next to a separate port field (default 443).</p>
+    </div>
+    <div class="callout">
+      <div>
+        <div class="bracket">
+          <code>2001:db8::1</code>
+          <span>an IPv6 literal is a valid server address</span>
+        </div>
+        <p class="note">
+          <strong>Brackets are not needed in the app.</strong> The server and the port are two
+          fields, so a bare IPv6 address is unambiguous. A share link that carries a bracketed
+          address is read the same way.
+        </p>
+      </div>
+      <ul class="checks">
+        <li><strong>Literals and names.</strong> A hostname is resolved with the system resolver; an IPv4 or IPv6 literal is used as given.</li>
+        <li><strong>A and AAAA both work.</strong> A node that publishes only AAAA is reachable over IPv6; one that publishes only A is reached over IPv4.</li>
+        <li><strong>Names with both records use IPv4.</strong> The bundled client asks for the IPv4 address and does not retry over IPv6, so use an AAAA-only name or the IPv6 address when IPv4 is the broken side.</li>
+        <li><strong>The network must reach that family.</strong> An IPv6-only server needs IPv6 on the phone's current network; an IPv4-only network cannot reach one. If a family silently fails, the diagnostic export is the place to look.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<section id="install">
+  <div class="container">
+    <div class="section-head">
+      <h2>Install from Releases</h2>
+      <p>Signed APKs built by CI from this repository. No account or store is involved.</p>
+    </div>
+    <div class="release">
+      <div class="meta">
+        <span class="version">HY2DROID <strong id="release-version-2">latest</strong></span>
+        <span class="sub">Android 11+ · arm64 recommended · signed release</span>
+      </div>
+      <div class="assets">
+        <a class="btn btn-primary" href="https://github.com/noelbennettz/Hy2droid/releases/latest/download/app-arm64-v8a-release.apk" data-asset="arm64">arm64-v8a</a>
+        <a class="btn" href="https://github.com/noelbennettz/Hy2droid/releases/latest/download/app-universal-release.apk" data-asset="universal">Universal</a>
+        <a class="btn" href="https://github.com/noelbennettz/Hy2droid/releases">All releases</a>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <h3>Download</h3>
+        <p>Use arm64-v8a on a modern phone. The universal APK is larger but runs on every supported ABI; arm32 and x86 splits are on the release page.</p>
+      </div>
+      <div class="step">
+        <h3>Allow the install</h3>
+        <p>Android asks once whether the browser or file manager may install unknown apps. That permission can be revoked afterwards.</p>
+      </div>
+      <div class="step">
+        <h3>Add a profile</h3>
+        <p>Open the app, tap +, then paste a share link or scan the QR code from your provider. Nothing is uploaded anywhere.</p>
+      </div>
+      <div class="step">
+        <h3>Connect</h3>
+        <p>Accept the VPN prompt, which appears once per app. Android 17 also asks for local-network access once; refusing still lets public nodes work.</p>
+        <p>Expect: the app opens on an empty home screen after installing, and after connecting the status card and the notification report the same state. A failure names the step that failed.</p>
+      </div>
+    </div>
+    <p class="note">
+      <strong>Check the file before installing.</strong> Every release publishes
+      <code>SHA256SUMS.txt</code> next to the APKs. In the download directory run
+      <code>sha256sum -c SHA256SUMS.txt --ignore-missing</code> (it skips the splits
+      you did not download), then
+      <code>apksigner verify --print-certs app-arm64-v8a-release.apk</code> and
+      compare the <code>Signer #1 certificate SHA-256 digest</code> with the value
+      below. On the phone, an app such as AppVerifier shows the same digest for an
+      installed APK.
+    </p>
+    <p class="note">
+      <strong>Debug and release use different keys.</strong> Android refuses to update one with the other;
+      uninstall the debug copy first. Release signing certificate SHA-256:
+      <span class="mono">af:9c:2f:a9:ac:ff:cd:5a:f4:d0:a2:d7:92:4e:c4:51:85:11:8a:df:37:ee:eb:a3:8e:4d:da:54:7d:d4:bf:9b</span>
+    </p>
+  </div>
+</section>
+
+<section id="specs">
+  <div class="container">
+    <div class="section-head">
+      <h2>Technical details</h2>
+      <p>For people who want to verify before installing.</p>
+    </div>
+    <dl class="specs">
+      <div><dt>Package</dt><dd class="mono">us.leaf3stones.hy2droid</dd></div>
+      <div><dt>Version</dt><dd><span id="release-version-3">latest</span></dd></div>
+      <div><dt>Requires</dt><dd>Android 11 (API 30) or newer</dd></div>
+      <div><dt>Target</dt><dd>Android 17 (API 37)</dd></div>
+      <div><dt>ABIs</dt><dd>arm64-v8a, armeabi-v7a, x86_64, x86 (+ universal)</dd></div>
+      <div><dt>Core</dt><dd>Hysteria 2, official Go core bundled</dd></div>
+      <div><dt>Licences</dt><dd>In the app: Settings → About → Open source licenses</dd></div>
+      <div><dt>VPN</dt><dd>Android's built-in VPN service (<code>VpnService</code>), IPv4 + IPv6</dd></div>
+      <div><dt>Languages</dt><dd>7 — English, Arabic, Spanish, French, Russian, Simplified Chinese (the six official UN languages) and Traditional Chinese</dd></div>
+      <div><dt>License</dt><dd>AGPL-3.0 (source included in the repository)</dd></div>
+    </dl>
+  </div>
+</section>
+
+
+<section id="faq">
+  <div class="container">
+    <div class="section-head">
+      <h2>Questions</h2>
+      <p>Requirements, downloads and known limitations.</p>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>Is it free?</summary>
+        <p>Yes. Hy2droid is free software under AGPL-3.0. The full source, build scripts and release workflow are in the repository. You pay only for your own server, if you run one.</p>
+      </details>
+      <details>
+        <summary>Does it work with IPv6-only and IPv4-only nodes?</summary>
+        <p>Yes, as long as the phone's current network can reach that family. An IPv6 address goes in the server field as it is, and AAAA-only names work. For a name with both records the bundled client uses IPv4 and does not retry over IPv6, so use an AAAA-only name or the IPv6 address when IPv4 is the broken side.</p>
+      </details>
+      <details>
+        <summary>Which APK should I take?</summary>
+        <p><strong>arm64-v8a</strong> covers almost every phone from the last several years. <strong>armeabi-v7a</strong> is for old 32-bit devices, <strong>x86_64</strong> for emulators and a few tablets, and the <strong>universal</strong> build works anywhere but is larger.</p>
+      </details>
+      <details>
+        <summary>Android says “App not installed”. Why?</summary>
+        <p>Almost always a truncated download or an older copy signed with another key. Re-download from the release page; if that does not help, uninstall the previous build (a debug APK cannot be updated by a release APK).</p>
+      </details>
+      <details>
+        <summary>Why do IPv6-only websites not load with the default DNS mode?</summary>
+        <p>The default answers A queries inside the tunnel and has no AAAA answers by design. For IPv6-only destinations, turn off “Answer DNS in the tunnel” in Settings → Network → Advanced and use forwarded resolvers. This does not affect connecting to IPv6-only servers.</p>
+      </details>
+      <details>
+        <summary>Does it need root or Google Play Services?</summary>
+        <p>Neither. It uses Android's built-in VPN service (<code>VpnService</code>), so it works on de-Googled ROMs. The QR scanner uses CameraX and ZXing locally; no network service is involved.</p>
+      </details>
+      <details>
+        <summary>Is it on Google Play?</summary>
+        <p>No. Every release is a signed APK on GitHub Releases; installing one needs the one-time “install unknown apps” permission for the browser or file manager you download it with.</p>
+      </details>
+      <details>
+        <summary>Hysteria 1 or other protocols?</summary>
+        <p>Hysteria 2 only. This is deliberately a focused client: a profile is the handful of values a share link carries, not a general proxy configuration.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="fine">
+      <strong>Hy2droid</strong> is an independent client for the
+      <a href="https://v2.hysteria.network/">Hysteria 2</a> protocol.
+      Not affiliated with the Hysteria project or apernet. Built on the official
+      Go core and <a href="https://github.com/heiher/hev-socks5-tunnel">hev-socks5-tunnel</a>.
+    </div>
+    <nav aria-label="Footer">
+      <a href="https://github.com/noelbennettz/Hy2droid">Source</a>
+      <a href="https://github.com/noelbennettz/Hy2droid/blob/main/LICENSE">License</a>
+      <a href="https://github.com/noelbennettz/Hy2droid/issues">Issues</a>
+      <a href="https://github.com/noelbennettz/Hy2droid/releases">Releases</a>
+      <a href="zh.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
+    </nav>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Hy2droid",
+  "operatingSystem": "Android 11+",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "license": "https://www.gnu.org/licenses/agpl-3.0.html",
+  "codeRepository": "https://github.com/noelbennettz/Hy2droid",
+  "downloadUrl": "https://github.com/noelbennettz/Hy2droid/releases/latest/download/app-arm64-v8a-release.apk"
+}
+</script>
+</body>
+</html>
+
