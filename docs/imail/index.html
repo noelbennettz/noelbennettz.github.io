@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iMail — self-hosted mail for your own domains</title>
+<meta name="description" content="iMail is a self-hosted mail server for your own domains: SMTP, IMAPS, POP3S, a browser mailbox and an admin console in one container.">
+<meta name="theme-color" content="#f4efe4">
+<meta name="color-scheme" content="light dark">
+<link rel="canonical" href="https://noelbennettz.github.io/imail/">
+<link rel="alternate" hreflang="zh-Hant" href="zh.html">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<script>
+(function () {
+  var root = document.documentElement;
+  var zh = root.lang.indexOf("zh") === 0;
+  try {
+    var saved = localStorage.getItem("theme");
+    root.dataset.theme = saved ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  } catch (e) { root.dataset.theme = "light"; }
+  document.addEventListener("DOMContentLoaded", function () {
+    var btn = document.querySelector(".theme-toggle");
+    if (!btn) return;
+    function render() {
+      var dark = root.dataset.theme === "dark";
+      btn.textContent = dark ? (zh ? "日間" : "Light") : (zh ? "夜間" : "Dark");
+      btn.setAttribute("aria-label",
+        dark ? (zh ? "切換日間模式" : "Switch to light mode")
+             : (zh ? "切換夜間模式" : "Switch to dark mode"));
+      btn.setAttribute("aria-pressed", dark ? "true" : "false");
+    }
+    btn.addEventListener("click", function () {
+      root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+      try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+      render();
+    });
+    render();
+  });
+})();
+</script>
+<link rel="stylesheet" href="style.css">
+<meta property="og:type" content="website">
+<meta property="og:title" content="iMail — mail on your own domain">
+<meta property="og:description" content="SMTP, IMAPS, POP3S, webmail and an admin console in one container. Multiple domains, ACME certificates, DKIM.">
+<meta property="og:url" content="https://noelbennettz.github.io/imail/">
+<meta property="og:image" content="https://noelbennettz.github.io/imail/assets/login.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<svg class="visually-hidden" aria-hidden="true" focusable="false">
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></symbol>
+  <symbol id="i-server" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.2 2.7-5.5 6-5.5s6 2.3 6 5.5"/><path d="M16 5.5a3 3 0 0 1 0 5.8M17 14.8c2.4.5 4 2.4 4 5.2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9S14.5 18.3 12 21c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3Z"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M13 15h4"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4m8-8 4 4-4 4M14 4l-4 16"/></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16"/></symbol>
+</svg>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="./">
+      <img src="assets/icon.svg" alt="" width="34" height="34">
+      iMail
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a class="hide-sm" href="#features">Features</a>
+      <a class="hide-sm" href="#dns">DNS &amp; TLS</a>
+      <a href="#deploy">Deploy</a>
+      <a class="hide-sm" href="https://github.com/noelbennettz/imail">GitHub</a>
+      <button class="theme-toggle" type="button" aria-pressed="false">Dark</button>
+      <a class="lang" href="zh.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero">
+  <div class="container">
+    <div>
+      <span class="eyebrow"><span class="dot"></span>Self-hosted · Docker · AGPL-3.0</span>
+      <h1>Mail, on<br><span class="grad">your own domain.</span></h1>
+      <p class="lede">
+        A mail server for your own domains: SMTP for incoming mail, submission
+        for sending from a mail app, IMAPS and POP3S for reading, a browser inbox
+        and an admin console — all in one container. All of its state —
+        configuration, database, DKIM key and certificates — is one
+        <code>config/</code> directory you can copy.
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#deploy">
+          <svg aria-hidden="true"><use href="#i-terminal"/></svg>
+          Deploy with Compose
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/noelbennettz/imail">
+          <svg aria-hidden="true"><use href="#i-code"/></svg>
+          Source &amp; docs
+        </a>
+      </div>
+      <div class="pills">
+        <span class="pill">Status: beta</span>
+        <span class="pill">SMTP · IMAPS · POP3S</span>
+        <span class="pill">IPv4 + IPv6</span>
+        <span class="pill">7 UI languages</span>
+        <span class="pill">SQLite default</span>
+        <span class="pill">AGPL-3.0</span>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar" aria-hidden="true">
+        <span></span><span></span><span></span>
+        <div class="browser-url">https://mail.example.com/</div>
+      </div>
+      <img src="assets/login.png" width="1373" height="856" alt="iMail sign-in page: a blue panel next to an account and password form">
+    </div>
+  </div>
+</section>
+
+
+<section id="features">
+  <div class="container">
+    <div class="section-head">
+      <h2>What it does</h2>
+      <p>Protocols, mailbox, administration and certificates, all in the same container.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-server"/></svg></div>
+        <h3>Mail protocols on standard ports</h3>
+        <p>SMTP on 25 with STARTTLS, submission on 587, SMTPS on 465, IMAPS on 993, POP3 on 110 with STLS required before login, POP3S on 995. The web interface uses 80 and 443.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-users"/></svg></div>
+        <h3>A browser mailbox</h3>
+        <p>Folders, search, conversation view, reply, reply-all, forward, attachment download and light/dark themes. Seven interface languages — the six official UN languages plus Traditional Chinese — chosen from the browser.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-db"/></svg></div>
+        <h3>Domains, users and quotas</h3>
+        <p>A primary domain plus additional domains, per-mailbox quotas, and an admin console for users, domains, DNS records and certificates.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-key"/></svg></div>
+        <h3>Certificates</h3>
+        <p>ACME with HTTP-01, manual DNS-01 or a Cloudflare token, or an uploaded certificate. Each domain can have its own; the ACME flows renew automatically.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
+        <h3>Deliverability</h3>
+        <p>DKIM signing, SPF checks, DMARC and PTR guidance, and a configurable spam filter. Outbound delivery verifies the remote server's certificate.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-mail"/></svg></div>
+        <h3>One data directory</h3>
+        <p>SQLite by default, MySQL and PostgreSQL for larger installs. Configuration, database, DKIM key and certificates live under <code>config/</code>, so a backup is a directory copy.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<section id="deploy" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>Deploy on a VPS</h2>
+      <p>Docker with Compose, a public IPv4 and/or IPv6 address, and a domain whose DNS you control. Port 80 must be reachable for HTTP-01.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <h3>Clone and create the data directory</h3>
+        <p>The <code>config/</code> directory is the whole server state: configuration, SQLite, DKIM key and TLS material.</p>
+        <div class="copy-wrap">
+          <button class="copy" type="button" data-copy>Copy</button>
+          <pre><code>git clone https://github.com/noelbennettz/imail.git
+cd imail
+mkdir -p config</code></pre>
+        </div>
+      </div>
+      <div class="step">
+        <h3>Start the published image</h3>
+        <p>This pulls <code>ghcr.io/noelbennettz/imail:latest</code> and publishes the eight mail and web ports. The published addresses, ports and the <code>./config</code> path are parameters you can change; DOCS.md explains each one, and <code>docker-compose.example.yml</code> in the repository carries every port and volume with a comment.</p>
+        <div class="copy-wrap">
+          <button class="copy" type="button" data-copy>Copy</button>
+          <pre><code>docker compose -f docker-compose.ghcr.yml up -d
+docker compose -f docker-compose.ghcr.yml logs -f imail</code></pre>
+        </div>
+      </div>
+      <div class="step">
+        <h3>Finish the setup wizard</h3>
+        <p>Open <code>http://your-server-ip/</code> and enter the setup token the container printed at startup: run <code>docker compose logs imail</code> and copy the 24-character token from the line beginning <code>***  Setup token:</code>. The wizard then asks for database, administrator, domains, DNS records and TLS. The token lives in memory only, is needed for every wizard request, and disappears once setup finishes; it stops a stranger from completing setup first, but it does not encrypt the administrator password, so still finish it on a trusted network.</p>
+      </div>
+    </div>
+    <p class="note">
+      <strong>Check port 25 before debugging anything else.</strong> Many VPS providers block outbound
+      TCP 25; receiving works, but delivery to other mail servers does not until they lift it.
+      On rootless Docker, publish high host ports instead (<code>8080:80</code>, <code>18443:443</code>, …)
+      because ports below 1024 cannot be bound.
+    </p>
+  </div>
+</section>
+
+
+<section id="dns">
+  <div class="container">
+    <div class="section-head">
+      <h2>DNS records and TLS</h2>
+      <p>The setup wizard writes the exact values for every domain; this is their shape.</p>
+    </div>
+    <div class="split">
+      <div>
+        <ul class="checks">
+          <li><strong>A and AAAA for the mail host.</strong> Add the families the server actually has, and MX, SPF, DKIM and DMARC for every domain that receives mail.</li>
+          <li><strong>PTR is set at the VPS, not in your zone.</strong> Point reverse DNS at <code>smtp.example.com</code> so receivers can confirm the sending host.</li>
+          <li><strong>TLS covers every hostname clients use.</strong> Usually the apex plus <code>smtp.</code>, <code>imap.</code>, <code>pop.</code> and the web domain.</li>
+          <li><strong>Certificate options.</strong> HTTP-01, DNS-01 (manual or a Cloudflare token), or an upload. HTTP-01 and Cloudflare renew automatically.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="copy-wrap">
+          <button class="copy" type="button" data-copy>Copy</button>
+          <pre><code>@                  A/AAAA  203.0.113.10 / 2001:db8::10
+mail               A/AAAA  same address
+smtp               A/AAAA  same address
+@                  MX      10 smtp.example.com.
+@                  TXT     "v=spf1 a mx ~all"
+default._domainkey TXT     "&lt;from the setup wizard&gt;"
+_dmarc             TXT     "v=DMARC1; p=quarantine; rua=mailto:postmaster@example.com"</code></pre>
+        </div>
+        <p class="note">
+          <strong>Propagation takes longer than the wizard.</strong> Check with <code>dig +short MX example.com</code>,
+          the DKIM TXT record, <code>_dmarc</code>, and <code>dig -x &lt;server-ip&gt;</code> before blaming the server.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="limits" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>Limits worth knowing</h2>
+      <p>What decides whether iMail fits, before you move an MX record.</p>
+    </div>
+    <div class="split">
+      <div>
+        <ul class="checks">
+          <li><strong>Port 25 decides whether mail flows.</strong> Remote servers connect to inbound 25 only (an MX record has no port field), and outbound 25 is needed to send. Many providers block both; an extra listener on another port only helps the clients you configure yourself.</li>
+          <li><strong>Account names are unique across domains.</strong> <code>alice@one.example</code> and <code>alice@two.example</code> cannot coexist; create <code>alice</code> and <code>alice-sales</code> instead.</li>
+          <li><strong>TLS needs the hostname clients use.</strong> SNI is checked strictly, so every name a client connects to must be in the certificate. Behind a reverse proxy, preserve SNI and the public hostname.</li>
+          <li><strong>Not every certificate renews itself.</strong> HTTP-01 and Cloudflare DNS-01 do; manual DNS-01 records and uploaded certificates you replace by hand.</li>
+        </ul>
+      </div>
+      <div>
+        <p class="note">
+          <strong>One server, one database.</strong> SQLite suits a single small server; MySQL or PostgreSQL
+          are for deployments that need an external database. IPv4-only and IPv6-only hosts both work, and
+          delivery to an address family the host does not have fails as an ordinary temporary error.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="security">
+  <div class="container">
+    <div class="section-head">
+      <h2>Security defaults</h2>
+      <p>What the server does with passwords, TLS and the first run. iMail is in beta: versions may change incompatibly, so back up <code>config/</code> before upgrading.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-lock"/></svg></div>
+        <h3>Passwords and sessions</h3>
+        <p>Passwords are stored as salted PBKDF2 hashes and must be at least eight characters. Changing one signs out every existing session.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
+        <h3>TLS everywhere</h3>
+        <p>TLS 1.2 and 1.3 only, IMAP is never served without TLS, and outbound delivery fails rather than falling back to plaintext when the remote certificate cannot be verified.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-key"/></svg></div>
+        <h3>First run and secrets</h3>
+        <p><code>config/config.json</code> is written with mode <code>0600</code>. The setup wizard exists only before the first successful initialisation, and its API requires the one-time setup token printed in the container log: finish it on a trusted network, and back up <code>config/</code> without ever committing it.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
+        <h3>Reporting a vulnerability</h3>
+        <p>Use the <strong>Security</strong> tab and <strong>Report a vulnerability</strong> on <a href="https://github.com/noelbennettz/imail">GitHub</a>. If that form is unavailable, open an issue titled “Security contact request” with no technical details. <a href="https://github.com/noelbennettz/imail/blob/main/SECURITY.md">SECURITY.md</a> lists the supported versions and what is in scope; there is no response-time guarantee.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<section id="specs" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>Technical details</h2>
+      <p>What runs, what it listens on, and what it stores.</p>
+    </div>
+    <dl class="specs">
+      <div class="wide"><dt>Image</dt><dd class="mono">ghcr.io/noelbennettz/imail</dd></div>
+      <div><dt>Tags</dt><dd class="mono">latest, main, sha-&lt;commit&gt;</dd></div>
+      <div><dt>Platforms</dt><dd>linux/amd64, linux/arm64</dd></div>
+      <div><dt>Ports</dt><dd>25, 80, 110, 443, 465, 587, 993, 995</dd></div>
+      <div><dt>State</dt><dd><code>config/</code> volume: config, SQLite, DKIM key, certificates</dd></div>
+      <div><dt>Database</dt><dd>SQLite default; MySQL and PostgreSQL supported</dd></div>
+      <div><dt>Languages</dt><dd>7 — English, Arabic, Spanish, French, Russian, Simplified Chinese (the six official UN languages) and Traditional Chinese</dd></div>
+      <div><dt>License</dt><dd>AGPL-3.0</dd></div>
+    </dl>
+  </div>
+</section>
+
+
+<section id="faq">
+  <div class="container">
+    <div class="section-head">
+      <h2>Questions</h2>
+      <p>The things worth knowing before pointing MX records at a new host.</p>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>Is this a mail server or just a webmail client?</summary>
+        <p>Both. iMail handles SMTP, submission, SMTPS, IMAPS, POP3/STLS and POP3S, and also serves a browser mailbox and an admin console. Any standard mail client can connect; the web interface is not required for day-to-day mail.</p>
+      </details>
+      <details>
+        <summary>My VPS blocks port 25. Can I still use it?</summary>
+        <p>Only partly. Other mail servers always connect to port 25 — an MX record has no port field — so if inbound 25 is blocked, mail from the internet cannot reach iMail; put a relay or a host with 25 open in front. Your own users can still submit on 587, and outbound delivery needs outbound 25 or a relay.</p>
+      </details>
+      <details>
+        <summary>How does login work with multiple domains?</summary>
+        <p>With one domain, <code>alice</code> and <code>alice@example.com</code> both work. With two or more, the full address is required because the bare name would be ambiguous. Accounts are globally unique: <code>alice@one.example</code> and <code>alice@two.example</code> cannot coexist; name them <code>alice</code> and <code>alice-sales</code>.</p>
+      </details>
+      <details>
+        <summary>Do I have to use its ACME certificates?</summary>
+        <p>No. HTTP-01, manual DNS-01, Cloudflare DNS-01 and uploaded PEM certificates are all supported, globally or per domain. Automatic renewal applies to the two ACME flows; watch uploaded certificates yourself.</p>
+      </details>
+      <details>
+        <summary>Can it run behind a TLS reverse proxy?</summary>
+        <p>Yes. Set <code>httpsEnabled</code> to <code>2</code> for HTTP-only mode and let the proxy terminate TLS. Session cookies only get <code>Secure</code> when HTTPS is enabled, so the proxy must be trusted.</p>
+      </details>
+      <details>
+        <summary>What do I back up?</summary>
+        <p>The whole <code>config/</code> directory: <code>config.json</code>, the SQLite database (or your DSN), the DKIM private key and the certificate directory. Copy it to a new host and the server comes back as it was.</p>
+      </details>
+      <details>
+        <summary>Does it work on an IPv6-only or IPv4-only host?</summary>
+        <p>Yes. IPv4-only, IPv6-only and dual-stack hosts all work; if the configured address family is missing at startup, the other one is used and the reason is logged. A destination that exists only on the missing family cannot be reached, so delivery to it is reported as a temporary failure.</p>
+      </details>
+      <details>
+        <summary>Why AGPL?</summary>
+        <p>Self-hosting, forking and paid support are fine. If you run a modified iMail as a network service, its users must be able to get the source of the version you run; that is section 13.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="fine">
+      <strong>iMail</strong> is a self-hosted mail server for your own domains, licensed AGPL-3.0.
+    </div>
+    <nav aria-label="Footer">
+      <a href="https://github.com/noelbennettz/imail">Source</a>
+      <a href="https://github.com/noelbennettz/imail/blob/main/README.md">Docs</a>
+      <a href="https://github.com/noelbennettz/imail/pkgs/container/imail">Container</a>
+      <a href="https://github.com/noelbennettz/imail/blob/main/LICENSE">License</a>
+      <a href="zh.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
+    </nav>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "iMail",
+  "operatingSystem": "Linux (Docker)",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "license": "https://www.gnu.org/licenses/agpl-3.0.html",
+  "codeRepository": "https://github.com/noelbennettz/imail",
+  "downloadUrl": "https://github.com/noelbennettz/imail/pkgs/container/imail"
+}
+</script>
+</body>
+</html>
+

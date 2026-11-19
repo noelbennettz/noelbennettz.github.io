@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hy2droid — Hysteria 2 的 Android 用戶端</title>
+<meta name="description" content="Hy2droid 是免費、開源的 Android Hysteria 2 客戶端。貼上分享連結或掃 QR，就能用完整通道連線，支援 IPv4 與 IPv6，不需 root、不需 Google Play 服務。">
+<meta name="theme-color" content="#070907">
+<meta name="color-scheme" content="dark light">
+<link rel="canonical" href="https://noelbennettz.github.io/Hy2droid/zh.html">
+<link rel="alternate" hreflang="en" href="index.html">
+<link rel="icon" href="assets/icon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/icon.png">
+<script>
+(function () {
+  var root = document.documentElement;
+  var zh = root.lang.indexOf("zh") === 0;
+  try {
+    var saved = localStorage.getItem("theme");
+    root.dataset.theme = saved ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  } catch (e) { root.dataset.theme = "dark"; }
+  document.addEventListener("DOMContentLoaded", function () {
+    var btn = document.querySelector(".theme-toggle");
+    if (!btn) return;
+    function render() {
+      var dark = root.dataset.theme === "dark";
+      btn.textContent = dark ? (zh ? "日間" : "Light") : (zh ? "夜間" : "Dark");
+      btn.setAttribute("aria-label",
+        dark ? (zh ? "切換日間模式" : "Switch to light mode")
+             : (zh ? "切換夜間模式" : "Switch to dark mode"));
+      btn.setAttribute("aria-pressed", dark ? "true" : "false");
+    }
+    btn.addEventListener("click", function () {
+      root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+      try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+      render();
+    });
+    render();
+  });
+})();
+</script>
+<link rel="stylesheet" href="style.css">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hy2droid — Hysteria 2 的 Android 用戶端">
+<meta property="og:description" content="貼上 hysteria2:// 或掃 QR 就開通。完整通道、IPv4 + IPv6、免 root、免 Play 服務。">
+<meta property="og:url" content="https://noelbennettz.github.io/Hy2droid/zh.html">
+<meta property="og:image" content="https://noelbennettz.github.io/Hy2droid/assets/screenshot-home.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">跳到內容</a>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="zh.html">
+      <img src="assets/icon.png" alt="" width="30" height="30">
+      Hy2droid
+    </a>
+    <nav class="nav" aria-label="主要導覽">
+      <a class="hide-sm" href="#features">功能</a>
+      <a class="hide-sm" href="#ipv6">位址</a>
+      <a class="nav-install" href="#install">安裝</a>
+      <a class="hide-sm" href="https://github.com/noelbennettz/Hy2droid">GitHub</a>
+      <button class="theme-toggle" type="button" aria-pressed="false">夜間</button>
+      <a class="lang" href="index.html" hreflang="en" lang="en">EN</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero">
+  <div class="container">
+    <div>
+      <p class="eyebrow"><span class="dot"></span>Hysteria 2 / Android 11+ / 免 root</p>
+      <h1>自己的伺服器，<br><span class="grad">裝進手機。</span></h1>
+      <p class="lede">
+        Hy2droid 是一個 Android App，把手機連到跑 Hysteria 2 的伺服器
+        ——Hysteria 2 是一種繞過封鎖與限速的協定。
+        它只是手機這一端：伺服器位址由架站的人以分享連結或 QR 碼提供。
+        連上之後，手機上各 App 的流量就改由那台伺服器出去。
+        需要 Android 11 以上；不用 root、不用 Google 帳號，也沒有設定檔要改。
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://github.com/noelbennettz/Hy2droid/releases/latest/download/app-arm64-v8a-release.apk" data-asset="arm64">
+          ↓ 下載 APK
+        </a>
+        <a class="btn" href="https://github.com/noelbennettz/Hy2droid">原始碼 ↗</a>
+      </div>
+      <div class="pills">
+        <span class="pill">Android 11+</span>
+        <span class="pill">IPv4 + IPv6</span>
+        <span class="pill">免 root</span>
+        <span class="pill">AGPL-3.0</span>
+        <span class="pill"><span id="release-version">latest</span> · <span id="release-date">releases</span></span>
+      </div>
+    </div>
+    <div class="hero-art">
+      <div class="phone back">
+        <img src="assets/screenshot-settings.png" width="1080" height="2400" loading="lazy" alt="設定畫面：網路選項">
+      </div>
+      <div class="phone front">
+        <img src="assets/screenshot-home.png" width="1080" height="2400" alt="主畫面：已連線的通道與節點列表">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <div class="section-head">
+      <h2>它做什麼</h2>
+      <p>加入伺服器、按下連線，手機的上網流量就從它出去。主畫面會顯示目前是否連上、
+        用了多少流量，連不上時也會指出是哪一步失敗。</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <h3>加入伺服器</h3>
+        <p>貼上 <code>hysteria2://</code> 連結、用相機掃 QR 碼（不經過網路），或在瀏覽器點連結交給 App。App 把每一個加入的伺服器叫做「節點」。已連線時切換伺服器會重新建立連線。</p>
+      </article>
+      <article class="card">
+        <h3>IPv4 與 IPv6</h3>
+        <p>兩種位址的流量都走這條連線。伺服器欄位可以填網域名稱或位址，port 另外填。</p>
+      </article>
+      <article class="card">
+        <h3>挑選 App</h3>
+        <p>可以指定哪些 App 不經過這條連線。Android 13 以上還能讓本機網路流量留在本地，印表機、NAS 與投放才不會斷。</p>
+      </article>
+      <article class="card">
+        <h3>連不上會說原因</h3>
+        <p>連不上時狀態卡會說哪一步失敗：名稱解析不到、TLS 失敗、密碼被拒絕，或完全沒有回應。診斷頁可以再跑測試、匯出遮蔽後的日誌。</p>
+      </article>
+      <article class="card">
+        <h3>沒有帳號、沒有追蹤</h3>
+        <p>加入的伺服器存在 App 的私有儲存空間。沒有帳號、沒有分析、沒有 crash 回報，也沒有更新檢查。</p>
+      </article>
+      <article class="card">
+        <h3>已知限制</h3>
+        <p>只支援 Hysteria 2。一個伺服器就是一條分享連結：沒有訂閱 URL，也沒有 App 內更新——新版本從 Releases 下載。預設的名稱查詢只回 IPv4 位址，所以要連 IPv6-only 的網站時要關掉「在通道內回答 DNS」。App 預設封鎖 QUIC（HTTP/3 用的傳輸方式，UDP 443 埠），可在「被封鎖的流量」調整。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="screens">
+  <div class="container">
+    <div class="section-head">
+      <h2>畫面</h2>
+      <p>整個 App 只有兩個畫面：主畫面看狀態與已存的伺服器，設定則在右上角的齒輪裡。</p>
+    </div>
+    <div class="shots">
+      <figure>
+        <img src="assets/screenshots/s1.png" width="1080" height="2400" loading="lazy" alt="主畫面：標著「已連線」的狀態卡寫出節點名稱 Home，下方節點列表把 Home 標為使用中並顯示 2248 ms 延遲，右下角是連線與新增節點按鈕。">
+        <figcaption>主畫面：通道是否連上、用的是哪個伺服器，以及那個伺服器回應要多久。</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/screenshots/s2.png" width="1080" height="2400" loading="lazy" alt="設定畫面：外觀區有動態配色、顯示伺服器位址與即時流量，網路區有分割通道、被封鎖的流量、略過本機網路與通道 MTU，下方註明變更會在下次連線時生效。">
+        <figcaption>設定：先是外觀，再來是下次連線才生效的網路選項。</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="ipv6">
+  <div class="container">
+    <div class="section-head">
+      <h2>伺服器位址</h2>
+      <p>伺服器欄位接受網域名稱、IPv4 或 IPv6 位址，port 另外填（預設 443）。</p>
+    </div>
+    <div class="callout">
+      <div>
+        <div class="bracket">
+          <code>2001:db8::1</code>
+          <span>IPv6 字面量可以直接當伺服器位址</span>
+        </div>
+        <p class="note">
+          <strong>App 裡不需要加括號。</strong>伺服器與 port 是兩個欄位，裸 IPv6 位址不會有歧義；
+          分享連結裡帶括號的位址也照同樣方式讀取。
+        </p>
+      </div>
+      <ul class="checks">
+        <li><strong>字面量與域名。</strong>網域名稱交給系統解析器；IPv4 或 IPv6 字面量照輸入使用。</li>
+        <li><strong>A 與 AAAA 都能用。</strong>只發佈 AAAA 的節點走 IPv6；只發佈 A 的節點走 IPv4。</li>
+        <li><strong>同時有 A 與 AAAA 的域名走 IPv4。</strong>內建的用戶端會直接要 IPv4 位址，不會改用 IPv6，所以 IPv4 壞掉時請用只有 AAAA 的域名或 IPv6 位址。</li>
+        <li><strong>網路必須到得了那個位址族。</strong>IPv6-only 伺服器需要手機當下網路有 IPv6；只有 IPv4 的網路到不了。位址族靜默失敗時請看診斷匯出。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<section id="install">
+  <div class="container">
+    <div class="section-head">
+      <h2>從 Releases 安裝</h2>
+      <p>APK 由 CI 從這個 repo 建置並簽章，不需要帳號，也不用經過商店。</p>
+    </div>
+    <div class="release">
+      <div class="meta">
+        <span class="version">HY2DROID <strong id="release-version-2">latest</strong></span>
+        <span class="sub">Android 11+ · 建議 arm64 · 簽章 release 版</span>
+      </div>
+      <div class="assets">
+        <a class="btn btn-primary" href="https://github.com/noelbennettz/Hy2droid/releases/latest/download/app-arm64-v8a-release.apk" data-asset="arm64">arm64-v8a</a>
+        <a class="btn" href="https://github.com/noelbennettz/Hy2droid/releases/latest/download/app-universal-release.apk" data-asset="universal">通用版</a>
+        <a class="btn" href="https://github.com/noelbennettz/Hy2droid/releases">所有版本</a>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <h3>下載</h3>
+        <p>現代手機用 arm64-v8a。不確定架構就用通用版，檔案大一點但每個 ABI 都能跑；arm32 與 x86 的分割檔在 release 頁面。</p>
+      </div>
+      <div class="step">
+        <h3>允許安裝</h3>
+        <p>Android 只會問一次是否允許瀏覽器或檔案管理器安裝未知來源 App；這個權限之後可以收回。</p>
+      </div>
+      <div class="step">
+        <h3>加入節點</h3>
+        <p>開 App，按 +，貼上分享連結或掃供應商給的 QR。整個過程不會上傳到任何地方。</p>
+      </div>
+      <div class="step">
+        <h3>連線</h3>
+        <p>同意 VPN 提示，每個 App 只問一次。Android 17 會再問一次本機網路權限，拒絕也不影響連公網節點。</p>
+        <p>預期看到：安裝後 App 開在空白的主畫面；連上之後狀態卡與通知顯示同一個狀態。失敗時會指出是哪一步。</p>
+      </div>
+    </div>
+    <p class="note">
+      <strong>安裝前先核對檔案。</strong>每個 release 都會在 APK 旁附上
+      <code>SHA256SUMS.txt</code>。在下載目錄執行
+      <code>sha256sum -c SHA256SUMS.txt --ignore-missing</code>（沒下載的分割檔會跳過），
+      再執行 <code>apksigner verify --print-certs app-arm64-v8a-release.apk</code>，
+      把它印出的 <code>Signer #1 certificate SHA-256 digest</code> 與下面這個值比對。
+      手機上可以用 AppVerifier 這類 App 看已安裝 APK 的同一組指紋。
+    </p>
+    <p class="note">
+      <strong>debug 與 release 使用不同金鑰。</strong>Android 不會允許互相覆蓋，請先解除安裝 debug 版。
+      Release 簽章憑證 SHA-256：
+      <span class="mono">af:9c:2f:a9:ac:ff:cd:5a:f4:d0:a2:d7:92:4e:c4:51:85:11:8a:df:37:ee:eb:a3:8e:4d:da:54:7d:d4:bf:9b</span>
+    </p>
+  </div>
+</section>
+
+<section id="specs">
+  <div class="container">
+    <div class="section-head">
+      <h2>技術細節</h2>
+      <p>給想在安裝前先確認的人。</p>
+    </div>
+    <dl class="specs">
+      <div><dt>套件名稱</dt><dd class="mono">us.leaf3stones.hy2droid</dd></div>
+      <div><dt>版本</dt><dd><span id="release-version-3">latest</span></dd></div>
+      <div><dt>系統需求</dt><dd>Android 11（API 30）以上</dd></div>
+      <div><dt>Target SDK</dt><dd>Android 17（API 37）</dd></div>
+      <div><dt>ABI</dt><dd>arm64-v8a、armeabi-v7a、x86_64、x86（另有通用版）</dd></div>
+      <div><dt>Core</dt><dd>Hysteria 2，內建官方 Go core</dd></div>
+      <div><dt>元件授權</dt><dd>在 App 內：設定 → 關於 → 開放原始碼授權</dd></div>
+      <div><dt>VPN</dt><dd>Android 內建的 VPN 服務（<code>VpnService</code>），IPv4 + IPv6</dd></div>
+      <div><dt>語言</dt><dd>7 種 — 聯合國六種正式語文（英、阿、西、法、俄、簡中）另加繁中</dd></div>
+      <div><dt>授權</dt><dd>AGPL-3.0（原始碼在 repository 內）</dd></div>
+    </dl>
+  </div>
+</section>
+
+
+<section id="faq">
+  <div class="container">
+    <div class="section-head">
+      <h2>常見問題</h2>
+      <p>系統需求、下載與已知限制。</p>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>免費嗎？</summary>
+        <p>免費。Hy2droid 是 AGPL-3.0 的自由軟體，完整原始碼、建置腳本與 release workflow 都在 repository 裡。要花錢的只有你自己的伺服器（如果有的話）。</p>
+      </details>
+      <details>
+        <summary>支援 IPv6-only 與 IPv4-only 節點嗎？</summary>
+        <p>支援，前提是手機當下的網路到得了那個位址族別。IPv6 字面量直接填在伺服器欄位即可，只有 AAAA 的域名也能用。雙棧域名 core 會優先 IPv4 且不 fallback，所以 IPv4 壞掉時請改用 AAAA-only 域名或 IPv6 字面量。</p>
+      </details>
+      <details>
+        <summary>該下載哪個 APK？</summary>
+        <p>近幾年的手機幾乎都是 <strong>arm64-v8a</strong>。<strong>armeabi-v7a</strong> 給老舊 32 位元裝置，<strong>x86_64</strong> 給模擬器與少數平板，<strong>通用版</strong> 到處都能跑但檔案較大。</p>
+      </details>
+      <details>
+        <summary>Android 說「App 未安裝」怎麼辦？</summary>
+        <p>幾乎都是下載不完整，或裝置上已有另一把金鑰簽的舊版本。先重新下載；還是不行就解除安裝舊版（debug APK 不能被 release APK 覆蓋）。</p>
+      </details>
+      <details>
+        <summary>為什麼預設 DNS 模式下 IPv6-only 網站打不開？</summary>
+        <p>預設模式在通道內回答 A 查詢，設計上不提供 AAAA。需要連 IPv6-only 的目的地時，請到「設定 → 網路 → 進階」關掉「在通道內回答 DNS」，改用轉發解析器。這不影響連 IPv6-only 的伺服器。</p>
+      </details>
+      <details>
+        <summary>需要 root 或 Google Play 服務嗎？</summary>
+        <p>都不需要。它用 Android 內建的 VPN 服務（<code>VpnService</code>），de-Googled ROM 也能跑。QR 掃描用 CameraX 與 ZXing 在本機完成，不經過任何網路服務。</p>
+      </details>
+      <details>
+        <summary>上 Google Play 了嗎？</summary>
+        <p>沒有。每個版本都是放在 GitHub Releases 的簽章 APK；安裝時要對下載它的瀏覽器或檔案管理器開一次「安裝未知來源應用程式」權限。</p>
+      </details>
+      <details>
+        <summary>支援 Hysteria 1 或其他協定嗎？</summary>
+        <p>只支援 Hysteria 2。這是刻意的取捨：一個節點就是分享連結裡的那幾個值，不是通用代理設定。</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="fine">
+      <strong>Hy2droid</strong> 是 <a href="https://v2.hysteria.network/">Hysteria 2</a>
+      協定的獨立客戶端，與 Hysteria 專案及 apernet 無隸屬關係。
+      內建官方 Go core 與
+      <a href="https://github.com/heiher/hev-socks5-tunnel">hev-socks5-tunnel</a>。
+    </div>
+    <nav aria-label="頁尾">
+      <a href="https://github.com/noelbennettz/Hy2droid">原始碼</a>
+      <a href="https://github.com/noelbennettz/Hy2droid/blob/main/LICENSE">授權</a>
+      <a href="https://github.com/noelbennettz/Hy2droid/issues">問題回報</a>
+      <a href="https://github.com/noelbennettz/Hy2droid/releases">版本發佈</a>
+      <a href="index.html" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Hy2droid",
+  "operatingSystem": "Android 11+",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "license": "https://www.gnu.org/licenses/agpl-3.0.html",
+  "codeRepository": "https://github.com/noelbennettz/Hy2droid",
+  "downloadUrl": "https://github.com/noelbennettz/Hy2droid/releases/latest/download/app-arm64-v8a-release.apk"
+}
+</script>
+</body>
+</html>
+

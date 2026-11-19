@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iMail — 用自己的網域自架郵件伺服器</title>
+<meta name="description" content="iMail 是給自己網域用的自架郵件伺服器：SMTP、IMAPS、POP3S、瀏覽器信箱與管理台都在同一個容器裡。">
+<meta name="theme-color" content="#f4efe4">
+<meta name="color-scheme" content="light dark">
+<link rel="canonical" href="https://noelbennettz.github.io/imail/zh.html">
+<link rel="alternate" hreflang="en" href="index.html">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<script>
+(function () {
+  var root = document.documentElement;
+  var zh = root.lang.indexOf("zh") === 0;
+  try {
+    var saved = localStorage.getItem("theme");
+    root.dataset.theme = saved ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  } catch (e) { root.dataset.theme = "light"; }
+  document.addEventListener("DOMContentLoaded", function () {
+    var btn = document.querySelector(".theme-toggle");
+    if (!btn) return;
+    function render() {
+      var dark = root.dataset.theme === "dark";
+      btn.textContent = dark ? (zh ? "日間" : "Light") : (zh ? "夜間" : "Dark");
+      btn.setAttribute("aria-label",
+        dark ? (zh ? "切換日間模式" : "Switch to light mode")
+             : (zh ? "切換夜間模式" : "Switch to dark mode"));
+      btn.setAttribute("aria-pressed", dark ? "true" : "false");
+    }
+    btn.addEventListener("click", function () {
+      root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+      try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+      render();
+    });
+    render();
+  });
+})();
+</script>
+<link rel="stylesheet" href="style.css">
+<meta property="og:type" content="website">
+<meta property="og:title" content="iMail — 用自己的網域收發信">
+<meta property="og:description" content="SMTP、IMAPS、POP3S、網頁信箱與管理台，一個容器搞定。多網域、ACME 憑證、DKIM。">
+<meta property="og:url" content="https://noelbennettz.github.io/imail/zh.html">
+<meta property="og:image" content="https://noelbennettz.github.io/imail/assets/login.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">跳到內容</a>
+
+<svg class="visually-hidden" aria-hidden="true" focusable="false">
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></symbol>
+  <symbol id="i-server" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.2 2.7-5.5 6-5.5s6 2.3 6 5.5"/><path d="M16 5.5a3 3 0 0 1 0 5.8M17 14.8c2.4.5 4 2.4 4 5.2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9S14.5 18.3 12 21c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3Z"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M13 15h4"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4m8-8 4 4-4 4M14 4l-4 16"/></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16"/></symbol>
+</svg>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="zh.html">
+      <img src="assets/icon.svg" alt="" width="34" height="34">
+      iMail
+    </a>
+    <nav class="nav" aria-label="主要導覽">
+      <a class="hide-sm" href="#features">功能</a>
+      <a class="hide-sm" href="#dns">DNS 與 TLS</a>
+      <a href="#deploy">部署</a>
+      <a class="hide-sm" href="https://github.com/noelbennettz/imail">GitHub</a>
+      <button class="theme-toggle" type="button" aria-pressed="false">夜間</button>
+      <a class="lang" href="index.html" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero">
+  <div class="container">
+    <div>
+      <span class="eyebrow"><span class="dot"></span>自架 · Docker · AGPL-3.0</span>
+      <h1>用自己的網域，<br><span class="grad">收發自己的信。</span></h1>
+      <p class="lede">
+        給自己網域用的郵件伺服器：SMTP 負責收信，submission 給郵件軟體寄信，IMAPS 與 POP3S 負責讀信，
+        再加上網頁信箱與管理台，都在同一個容器裡。所有狀態——設定、資料庫、DKIM 金鑰與憑證——就是一個
+        <code>config/</code> 目錄，可以直接複製。
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#deploy">
+          <svg aria-hidden="true"><use href="#i-terminal"/></svg>
+          用 Compose 部署
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/noelbennettz/imail">
+          <svg aria-hidden="true"><use href="#i-code"/></svg>
+          原始碼與文件
+        </a>
+      </div>
+      <div class="pills">
+        <span class="pill">狀態：beta</span>
+        <span class="pill">SMTP · IMAPS · POP3S</span>
+        <span class="pill">IPv4 + IPv6</span>
+        <span class="pill">七種介面語言</span>
+        <span class="pill">預設 SQLite</span>
+        <span class="pill">AGPL-3.0</span>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar" aria-hidden="true">
+        <span></span><span></span><span></span>
+        <div class="browser-url">https://mail.example.com/</div>
+      </div>
+      <img src="assets/login.png" width="1373" height="856" alt="iMail 登入頁：藍色面板與帳號密碼表單">
+    </div>
+  </div>
+</section>
+
+
+<section id="features">
+  <div class="container">
+    <div class="section-head">
+      <h2>它能做什麼</h2>
+      <p>協定、信箱、管理與憑證都在同一個容器裡。</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-server"/></svg></div>
+        <h3>標準連接埠上的郵件協定</h3>
+        <p>25 的 SMTP（STARTTLS）、587 submission、465 SMTPS、993 IMAPS、110 POP3（登入前必須 STLS）與 995 POP3S；網頁介面用 80 與 443。</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-users"/></svg></div>
+        <h3>網頁信箱</h3>
+        <p>資料夾、搜尋、對話檢視、回覆、全部回覆、轉寄、附件下載，以及淺色／深色主題。七種介面語言——聯合國六種正式語文另加繁中——在瀏覽器裡切換。</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-db"/></svg></div>
+        <h3>多網域、使用者與配額</h3>
+        <p>一個主要網域加上多個附屬網域、每個信箱的配額，以及管理使用者、網域、DNS 紀錄與憑證的管理台。</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-key"/></svg></div>
+        <h3>憑證</h3>
+        <p>HTTP-01、手動 DNS-01 或 Cloudflare token 的 ACME，也可以上傳憑證。每個網域可以有自己的憑證，ACME 的兩種流程會自動續期。</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
+        <h3>送信信譽</h3>
+        <p>DKIM 簽章、SPF 檢查、DMARC 與 PTR 指引，外加可調的垃圾郵件過濾等級。外送時會驗證對方伺服器的憑證。</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-mail"/></svg></div>
+        <h3>一個資料目錄</h3>
+        <p>預設 SQLite，較大的安裝可用 MySQL 或 PostgreSQL。設定、資料庫、DKIM 金鑰與憑證都在 <code>config/</code> 底下，備份就是複製目錄。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<section id="deploy" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>部署到 VPS</h2>
+      <p>需要 Docker + Compose、一個 public IPv4 和／或 IPv6，以及你自己控制 DNS 的網域。HTTP-01 需要對外開放 80。</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <h3>抓原始碼並建立資料目錄</h3>
+        <p><code>config/</code> 就是整台伺服器的狀態：設定、SQLite、DKIM 私鑰與 TLS 材料。</p>
+        <div class="copy-wrap">
+          <button class="copy" type="button" data-copy>複製</button>
+          <pre><code>git clone https://github.com/noelbennettz/imail.git
+cd imail
+mkdir -p config</code></pre>
+        </div>
+      </div>
+      <div class="step">
+        <h3>啟動已發佈的 image</h3>
+        <p>這會拉 <code>ghcr.io/noelbennettz/imail:latest</code>，並發佈八個郵件與網頁 port。要綁哪個位址、用哪些 port、<code>./config</code> 放哪裡都可以改；每個參數的意義寫在 DOCS.md，repo 裡的 <code>docker-compose.example.yml</code> 把每個 port 與 volume 都逐行註解好了。</p>
+        <div class="copy-wrap">
+          <button class="copy" type="button" data-copy>複製</button>
+          <pre><code>docker compose -f docker-compose.ghcr.yml up -d
+docker compose -f docker-compose.ghcr.yml logs -f imail</code></pre>
+        </div>
+      </div>
+      <div class="step">
+        <h3>完成安裝精靈</h3>
+        <p>開 <code>http://your-server-ip/</code>，輸入容器啟動時印出的安裝 token：執行 <code>docker compose logs imail</code>，從開頭是 <code>***  Setup token:</code> 的那一行複製 24 個字元的 token。接著精靈才會詢問資料庫、管理員、網域、DNS 紀錄與 TLS。token 只存在記憶體，精靈的每個請求都要帶，初始化完成後即消失；它能阻止陌生人搶先完成安裝，但不會加密管理員密碼，所以仍請在可信網路完成。</p>
+      </div>
+    </div>
+    <p class="note">
+      <strong>先確認 25 port，再開始除錯。</strong>很多 VPS 擋 outbound TCP 25，信就寄不出去；inbound 25 沒開則外網的信進不來（MX 沒有 port 欄位）。兩者都要請供應商處理。
+      Rootless Docker 不能綁 1024 以下，請改成高埠映射（<code>8080:80</code>、<code>18443:443</code>…）。
+    </p>
+  </div>
+</section>
+
+
+<section id="dns">
+  <div class="container">
+    <div class="section-head">
+      <h2>DNS 紀錄與 TLS</h2>
+      <p>安裝精靈會給每個網域精確的值；下面是這些紀錄的形狀。</p>
+    </div>
+    <div class="split">
+      <div>
+        <ul class="checks">
+          <li><strong>郵件主機要有 A 與 AAAA。</strong>只加伺服器實際擁有的族別；會收信的每個網域都要有自己的 MX、SPF、DKIM 與 DMARC。</li>
+          <li><strong>PTR 在 VPS 設定，不在你的 zone。</strong>把反解指到 <code>smtp.example.com</code>，收件方才能確認寄件主機。</li>
+          <li><strong>憑證要涵蓋用戶端會用的每個名字。</strong>通常是 apex 加上 <code>smtp.</code>、<code>imap.</code>、<code>pop.</code> 與網站網域。</li>
+          <li><strong>憑證的取得方式。</strong>HTTP-01、DNS-01（手動或 Cloudflare token）或上傳。HTTP-01 與 Cloudflare 會自動續期。</li>
+        </ul>
+      </div>
+      <div>
+        <div class="copy-wrap">
+          <button class="copy" type="button" data-copy>複製</button>
+          <pre><code>@                  A/AAAA  203.0.113.10 / 2001:db8::10
+mail               A/AAAA  同一個位址
+smtp               A/AAAA  同一個位址
+@                  MX      10 smtp.example.com.
+@                  TXT     "v=spf1 a mx ~all"
+default._domainkey TXT     "&lt;安裝精靈產生的值&gt;"
+_dmarc             TXT     "v=DMARC1; p=quarantine; rua=mailto:postmaster@example.com"</code></pre>
+        </div>
+        <p class="note">
+          <strong>傳播比精靈慢。</strong>先用 <code>dig +short MX example.com</code>、DKIM 的 TXT、<code>_dmarc</code> 與
+          <code>dig -x &lt;server-ip&gt;</code> 確認，再開始怪伺服器。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="limits" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>先知道的限制</h2>
+      <p>在改 MX 之前，決定這台伺服器適不適合你的事。</p>
+    </div>
+    <div class="split">
+      <div>
+        <ul class="checks">
+          <li><strong>25 port 決定能不能收發。</strong>外網寄信只會連 inbound 25（MX 沒有 port 欄位），寄外需要 outbound 25；很多主機商兩邊都封，替代 port 只對你自己設定的用戶端有用。</li>
+          <li><strong>帳號名稱在網域之間是唯一的。</strong><code>alice@one.example</code> 與 <code>alice@two.example</code> 不能並存，請改成 <code>alice</code> 與 <code>alice-sales</code>。</li>
+          <li><strong>TLS 要用用戶端連線的名字。</strong>SNI 檢查嚴格，用戶端連的每個名字都必須在憑證裡。放在反向代理後面時，要保留 SNI 與公開主機名。</li>
+          <li><strong>不是所有憑證都會自動續期。</strong>HTTP-01 與 Cloudflare DNS-01 會；手動 DNS-01 與上傳的憑證要自己換。</li>
+        </ul>
+      </div>
+      <div>
+        <p class="note">
+          <strong>一台伺服器，一個資料庫。</strong>SQLite 適合單機小規模；需要外部資料庫的部署才選 MySQL 或 PostgreSQL。
+          只有 IPv4 或只有 IPv6 的主機都能跑；送到主機沒有的位址族時，會當成一般的暫時性錯誤。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="security">
+  <div class="container">
+    <div class="section-head">
+      <h2>安全預設</h2>
+      <p>密碼、TLS 與第一次啟動時，伺服器實際的作法。iMail 目前是 beta：版本之間可能不相容，升級前請先備份 <code>config/</code>。</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-lock"/></svg></div>
+        <h3>密碼與 session</h3>
+        <p>密碼以加鹽的 PBKDF2 雜湊儲存，至少 8 字元；改密碼會撤銷所有現有 session。</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
+        <h3>全程 TLS</h3>
+        <p>只支援 TLS 1.2 與 1.3；IMAP 不會在沒有 TLS 的情況下提供；外送時對方憑證驗不過就回報失敗，不會退回明文。</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-key"/></svg></div>
+        <h3>第一次啟動與機密</h3>
+        <p><code>config/config.json</code> 以 <code>0600</code> 寫入。安裝精靈只在第一次成功初始化之前存在，而且它的 API 需要容器日誌印出的一次性安裝 token：請在可信網路完成，備份 <code>config/</code>，但不要 commit。</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
+        <h3>回報安全性問題</h3>
+        <p>請用 <a href="https://github.com/noelbennettz/imail">GitHub</a> 的 <strong>Security</strong> 分頁與 <strong>Report a vulnerability</strong>。若該表單不可用，開一個標題為「Security contact request」、不含任何技術細節的 issue。<a href="https://github.com/noelbennettz/imail/blob/main/SECURITY.md">SECURITY.md</a> 列出支援的版本與範圍；不承諾回應時限。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="specs" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>技術細節</h2>
+      <p>跑什麼、聽什麼、存什麼。</p>
+    </div>
+    <dl class="specs">
+      <div class="wide"><dt>Image</dt><dd class="mono">ghcr.io/noelbennettz/imail</dd></div>
+      <div><dt>Tags</dt><dd class="mono">latest、main、sha-&lt;commit&gt;</dd></div>
+      <div><dt>平台</dt><dd>linux/amd64、linux/arm64</dd></div>
+      <div><dt>連接埠</dt><dd>25、80、110、443、465、587、993、995</dd></div>
+      <div><dt>狀態</dt><dd><code>config/</code> volume：設定、SQLite、DKIM 金鑰、憑證</dd></div>
+      <div><dt>資料庫</dt><dd>預設 SQLite；支援 MySQL 與 PostgreSQL</dd></div>
+      <div><dt>語言</dt><dd>7 種 — 聯合國六種正式語文（英、阿、西、法、俄、簡中）另加繁中</dd></div>
+      <div><dt>授權</dt><dd>AGPL-3.0</dd></div>
+    </dl>
+  </div>
+</section>
+
+
+<section id="faq">
+  <div class="container">
+    <div class="section-head">
+      <h2>常見問題</h2>
+      <p>把 MX 指到新主機之前，值得先知道的事。</p>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>這是郵件伺服器，還是只有網頁信箱？</summary>
+        <p>兩者都是。iMail 處理 SMTP、submission、SMTPS、IMAPS、POP3/STLS 與 POP3S，同時提供網頁信箱與管理台。任何標準郵件軟體都能連，日常收發信不需要網頁介面。</p>
+      </details>
+      <details>
+        <summary>VPS 擋 25 port，還能用嗎？</summary>
+        <p>不完全能。其他郵件伺服器只會連 25——MX 紀錄沒有 port 欄位——所以 inbound 25 被封就收不到外網的信，只能前面放 relay 或一台 25 開著的機器。自己人仍可用 587 投稿，寄外則需要 outbound 25 或 relay。</p>
+      </details>
+      <details>
+        <summary>多網域時怎麼登入？</summary>
+        <p>只有一個網域時，<code>alice</code> 與 <code>alice@example.com</code> 都可以。兩個網域以上必須用完整位址，因為裸名稱會有歧義。帳號是全域唯一：<code>alice@one.example</code> 與 <code>alice@two.example</code> 不能並存，請命名成 <code>alice</code> 與 <code>alice-sales</code>。</p>
+      </details>
+      <details>
+        <summary>一定要用它申請的 ACME 憑證嗎？</summary>
+        <p>不用。HTTP-01、手動 DNS-01、Cloudflare DNS-01 與上傳 PEM 都支援，可全域或每個網域分開。自動續期只適用兩種 ACME 流程；上傳的憑證要自己注意到期。</p>
+      </details>
+      <details>
+        <summary>可以放在 TLS 反向代理後面嗎？</summary>
+        <p>可以。把 <code>httpsEnabled</code> 設成 <code>2</code>（HTTP-only），讓代理終結 TLS。session cookie 只在 HTTPS 啟用時標 <code>Secure</code>，所以代理必須可信。</p>
+      </details>
+      <details>
+        <summary>要備份什麼？</summary>
+        <p>整個 <code>config/</code>：<code>config.json</code>、SQLite 資料庫（或你的 DSN）、DKIM 私鑰與憑證目錄。複製到新主機，伺服器就回到原本的樣子。</p>
+      </details>
+      <details>
+        <summary>IPv6-only 或 IPv4-only 主機可以跑嗎？</summary>
+        <p>可以。只有 IPv4、只有 IPv6 或雙棧的主機都能跑；啟動時若設定的位址族不存在，會改用另一族並記錄原因。只存在於缺少那一族的目的地無法送達，會回報為暫時性失敗。</p>
+      </details>
+      <details>
+        <summary>為什麼是 AGPL？</summary>
+        <p>自架、fork、收費支援都可以。但如果你把修改過的 iMail 當成網路服務給別人用，使用者必須能取得你實際執行版本的原始碼——這就是第 13 條。</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="fine">
+      <strong>iMail</strong> 是給自己網域用的自架郵件伺服器，授權 AGPL-3.0。
+    </div>
+    <nav aria-label="頁尾">
+      <a href="https://github.com/noelbennettz/imail">原始碼</a>
+      <a href="https://github.com/noelbennettz/imail/blob/main/README.md">文件</a>
+      <a href="https://github.com/noelbennettz/imail/pkgs/container/imail">容器</a>
+      <a href="https://github.com/noelbennettz/imail/blob/main/LICENSE">授權</a>
+      <a href="index.html" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "iMail",
+  "operatingSystem": "Linux (Docker)",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "license": "https://www.gnu.org/licenses/agpl-3.0.html",
+  "codeRepository": "https://github.com/noelbennettz/imail",
+  "downloadUrl": "https://github.com/noelbennettz/imail/pkgs/container/imail"
+}
+</script>
+</body>
+</html>
+
