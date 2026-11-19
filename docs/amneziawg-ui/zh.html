@@ -357,7 +357,7 @@ sysctl -w net.ipv4.ip_forward=1 \
       <article class="card">
         <div class="icon"><svg aria-hidden="true"><use href="#i-lock"/></svg></div>
         <h3>搞清楚密碼在哪</h3>
-        <p>它在第一次啟動時產生、只在日誌印一次，而且從不以明文落地：<code>/etc/amnezia/admin.hash</code> 裡只有 argon2id hash。在 port 對外之前換成你自己的——<code>docker compose exec app api reset-password</code> 可以就地換掉——並記得面板簽的是 12 小時 cookie，改密碼會同時結束所有 session。</p>
+        <p>它在第一次啟動時產生，只寫一次到 <code>/etc/amnezia/first-run-password</code>（權限 <code>0600</code>）；第一次成功登入後該檔會刪除，<code>/etc/amnezia/admin.hash</code> 裡只有 argon2id hash。在 port 對外之前換成你自己的——<code>docker compose exec app api reset-password</code> 可以就地換掉。登入失敗預設會限流，設 <code>WEB_UI_TOTP_SECRET</code> 可開啟第二因素。面板簽的是 12 小時 cookie，改密碼會同時結束所有 session。</p>
       </article>
       <article class="card">
         <div class="icon"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>

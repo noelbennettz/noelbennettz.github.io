@@ -361,7 +361,7 @@ sysctl -w net.ipv4.ip_forward=1 \
       <article class="card">
         <div class="icon"><svg aria-hidden="true"><use href="#i-lock"/></svg></div>
         <h3>Know where the password is</h3>
-        <p>It is generated on the first start, printed once in the log and never stored in the clear: <code>/etc/amnezia/admin.hash</code> holds an argon2id hash only. Replace it with your own before the port is reachable from the internet — <code>docker compose exec app api reset-password</code> does it in place — and remember that the panel signs a 12-hour cookie and ends every session when the password changes.</p>
+        <p>It is generated on the first start and written once to <code>/etc/amnezia/first-run-password</code> (mode <code>0600</code>); the first successful login deletes that file, and <code>/etc/amnezia/admin.hash</code> holds an argon2id hash only. Replace it with your own before the port is reachable from the internet — <code>docker compose exec app api reset-password</code> does it in place. Failed sign-ins are limited by default, and <code>WEB_UI_TOTP_SECRET</code> turns on a second factor. The panel signs a 12-hour cookie and ends every session when the password changes.</p>
       </article>
       <article class="card">
         <div class="icon"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
