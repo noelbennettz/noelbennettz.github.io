@@ -295,6 +295,11 @@ _dmarc             TXT     "v=DMARC1; p=quarantine; rua=mailto:postmaster@exampl
       </article>
       <article class="card">
         <div class="icon"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
+        <h3>Abuse limits and delivery</h3>
+        <p>Five failed SMTP, IMAP or POP3 sign-ins from one address within fifteen minutes block that address for fifteen minutes; an account is only blocked when failures keep coming from several addresses, and the administrator can switch the limit off. Mail to other domains is written to a durable queue and retried for up to 72 hours; the admin console shows pending and failed counts.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
         <h3>Reporting a vulnerability</h3>
         <p>Use the <strong>Security</strong> tab and <strong>Report a vulnerability</strong> on <a href="https://github.com/noelbennettz/imail">GitHub</a>. If that form is unavailable, open an issue titled “Security contact request” with no technical details. <a href="https://github.com/noelbennettz/imail/blob/main/SECURITY.md">SECURITY.md</a> lists the supported versions and what is in scope; there is no response-time guarantee.</p>
       </article>
