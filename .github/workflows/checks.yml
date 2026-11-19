@@ -27,6 +27,15 @@ jobs:
         run: python3 scripts/gen-sitemap.py --check
       - name: Compile the helper scripts
         run: python3 -m py_compile scripts/*.py
+      - name: Stage a preview
+        if: github.event_name == 'pull_request'
+        run: python3 scripts/stamp-assets.py docs _site "$GITHUB_SHA"
+      - name: Upload the preview
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-preview
+          path: _site
 
   pages-state:
     name: Pages layout
