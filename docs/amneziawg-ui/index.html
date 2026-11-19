@@ -215,14 +215,16 @@ ls -l /dev/net/tun</code></pre>
     </div>
     <p class="note">
       <strong>The panel generates its admin password on the first start.</strong>
-      It prints it once, in <code>docker compose logs app</code>, and stores only
-      its argon2id hash. Copy it there — or set <code>WEB_UI_PASSWORD</code> to a
-      hash of your own.
+      It writes it once to <code>/etc/amnezia/first-run-password</code> (mode
+      <code>0600</code>) and stores only its argon2id hash. Read it with
+      <code>docker compose exec app cat /etc/amnezia/first-run-password</code>;
+      the first successful login deletes the file — or set
+      <code>WEB_UI_PASSWORD</code> to a hash of your own.
     </p>
     <div class="steps">
       <div class="step">
         <h3>Optionally: set your own password</h3>
-        <p>Left alone, the panel generates one on the first start and prints it once. To choose your own, hash it with the image — the password comes from stdin, and the output is an argon2id hash, never the password.</p>
+        <p>Left alone, the panel generates one on the first start and writes it to <code>/etc/amnezia/first-run-password</code> (mode <code>0600</code>; the first login deletes it). To choose your own, hash it with the image — the password comes from stdin, and the output is an argon2id hash, never the password.</p>
         <div class="copy-wrap">
           <button class="copy" type="button" data-copy>Copy</button>
           <pre><code>printf '%s' 'your-password' | docker run --rm -i ghcr.io/noelbennettz/amneziawg-ui:latest api hash-password</code></pre>
@@ -230,7 +232,7 @@ ls -l /dev/net/tun</code></pre>
       </div>
       <div class="step">
         <h3>Save this as compose.yaml</h3>
-        <p>Put the hash from step 1 into <code>WEB_UI_PASSWORD</code>, writing every <code>$</code> of it as <code>$$</code> (or leave the line out and read the generated password from <code>docker compose logs app</code>). The addresses, ports and volume are the parameters you are most likely to change — binding the panel to <code>127.0.0.1</code> keeps it reachable only from the host, which is what a local TLS proxy needs. Every key is explained in DOCS.md, and the repository ships the same file fully commented as <code>docker-compose.example.yml</code>.</p>
+        <p>Put the hash from step 1 into <code>WEB_UI_PASSWORD</code>, writing every <code>$</code> of it as <code>$$</code> (or leave the line out and read the generated password with <code>docker compose exec app cat /etc/amnezia/first-run-password</code>). The addresses, ports and volume are the parameters you are most likely to change — binding the panel to <code>127.0.0.1</code> keeps it reachable only from the host, which is what a local TLS proxy needs. Every key is explained in DOCS.md, and the repository ships the same file fully commented as <code>docker-compose.example.yml</code>.</p>
         <div class="copy-wrap">
           <button class="copy" type="button" data-copy>Copy</button>
           <pre><code>services:
