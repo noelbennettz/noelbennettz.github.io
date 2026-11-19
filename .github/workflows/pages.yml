@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -27,10 +27,20 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
+      - name: Verify links and sitemap
+        run: |
+          python3 scripts/check-links.py
+          python3 scripts/gen-sitemap.py --check
+
+      # The deployed tree is a copy: asset references carry the commit so a CSS
+      # change is not hidden behind a cached stylesheet.
+      - name: Stage the site
+        run: python3 scripts/stamp-assets.py docs _site "$GITHUB_SHA"
+
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs
+          path: _site
 
       - name: Deploy
         id: deployment

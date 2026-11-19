@@ -18,3 +18,10 @@ The site is plain HTML/CSS — English and Traditional Chinese, each page linkin
 to the other — with no build step, deployed to GitHub Pages by
 `.github/workflows/pages.yml`. `docs/sitemap.xml` lists all eight pages and
 `docs/robots.txt` points crawlers at it.
+
+Before a pull request, run `python3 scripts/check-links.py` and
+`python3 scripts/gen-sitemap.py --check`. The deploy stamps CSS/JS references
+with the commit SHA; `checks.yml` runs the same checks in CI and asserts that
+the project repositories' Pages sites stay disabled. See
+[CONTRIBUTING.md](CONTRIBUTING.md). A 404 page lists the three project sites.
+
