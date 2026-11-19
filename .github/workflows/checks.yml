@@ -1,0 +1,41 @@
+name: checks
+
+# Static-site checks that do not need Pages credentials: broken local links and
+# a sitemap that matches the files on disk. The Pages-state check runs only for
+# a push to main or a manual run because it needs the repository token.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: read
+
+jobs:
+  docs:
+    name: Links and sitemap
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check local links
+        run: python3 scripts/check-links.py
+      - name: Check sitemap
+        run: python3 scripts/gen-sitemap.py --check
+      - name: Compile the helper scripts
+        run: python3 -m py_compile scripts/*.py
+
+  pages-state:
+    name: Pages layout
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check that the central site is enabled and the project sites are not
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/check-pages.sh
