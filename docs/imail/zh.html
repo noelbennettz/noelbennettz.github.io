@@ -291,7 +291,7 @@ _dmarc             TXT     "v=DMARC1; p=quarantine; rua=mailto:postmaster@exampl
       <article class="card">
         <div class="icon"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
         <h3>濫用限制與投遞</h3>
-        <p>同一來源位址 15 分鐘內 5 次 SMTP、IMAP 或 POP3 登入失敗，會封鎖該位址 15 分鐘；帳號只有在失敗來自多個不同位址時才會被封鎖，管理員可以關掉限流。寄到其他網域的信會寫進持久佇列，最多重試 72 小時；管理台會顯示 pending 與 failed 數量。</p>
+        <p>同一來源位址 15 分鐘內 5 次 SMTP、IMAP 或 POP3 登入失敗，會封鎖該位址 15 分鐘；帳號只有在失敗來自多個不同位址時才會被封鎖，管理員可以關掉限流。外寄郵件（含本地信箱的副本）會寫進持久佇列，最多重試 72 小時；管理台會顯示 pending 與 failed 數量。</p>
       </article>
       <article class="card">
         <div class="icon"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
