@@ -12,10 +12,12 @@
 set -euo pipefail
 
 keep="${1:-3}"
-[[ "$keep" =~ ^[0-9]+$ ]] && [ "$keep" -ge 1 ] || {
+# A && B || C is not if-then-else: an invalid value must fail whether or not
+# the first test passes.
+if ! [[ "$keep" =~ ^[0-9]+$ ]] || [ "$keep" -lt 1 ]; then
   echo "::error::keep must be a positive integer (got '$keep')"
   exit 1
-}
+fi
 
 if ! command -v gh >/dev/null 2>&1; then
   echo "::warning::gh is not available; skipping the run cleanup"
@@ -43,7 +45,7 @@ deleted=0
 # older run is gone, or the token may not delete them (then stop, don't spin).
 while :; do
   if ! listing="$(gh run list --workflow "$workflow" --limit 100 \
-      --json databaseId --jq '.[].databaseId')"; then
+    --json databaseId --jq '.[].databaseId')"; then
     echo "::warning::could not list runs of $workflow; nothing pruned"
     exit 0
   fi

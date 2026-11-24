@@ -15,7 +15,6 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs")
 ROOT = os.path.normpath(ROOT)
 REF = re.compile(r'(?:href|src)="([^"]+)"', re.IGNORECASE)
 
-
 def resolve(page, ref):
     ref = html.unescape(ref).strip()
     if not ref or ref.startswith(("#", "//")):
@@ -33,7 +32,6 @@ def resolve(page, ref):
     if os.path.isdir(target):
         target = os.path.join(target, "index.html")
     return target
-
 
 def main():
     problems = []
@@ -56,11 +54,13 @@ def main():
                     problems.append(f"{rel}: missing {match.group(1)!r}")
     if problems:
         print("\n".join(problems), file=sys.stderr)
-        print(f"{len(problems)} broken local reference(s) in {pages} page(s)", file=sys.stderr)
+        print(
+            f"{len(problems)} broken local reference(s) in {pages} page(s)",
+            file=sys.stderr,
+        )
         return 1
     print(f"links ok ({pages} pages)", file=sys.stderr)
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

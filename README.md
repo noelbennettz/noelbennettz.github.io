@@ -20,9 +20,9 @@ to the other — with no build step, deployed to GitHub Pages by
 `docs/robots.txt` points crawlers at it.
 
 The four pages share one design contract. `docs/m3.css` holds the Material 3
-roles (colour, shape, state, motion, type) and the shared top-bar and button
-components; `docs/theme.js` boots the theme before the first paint. Each page
-seeds the roles in its own `style.css` and keeps its own fonts and one
+roles (colour, shape, motion, type) and the shared top-bar controls, buttons
+and `.visually-hidden`; `docs/theme.js` boots the theme before the first paint.
+Each page seeds the roles in its own `style.css` and keeps its own fonts and one
 signature element, which is why the sites look related without looking the
 same. Run `python3 scripts/check-contrast.py` after changing a colour.
 

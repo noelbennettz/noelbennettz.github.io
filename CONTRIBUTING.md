@@ -17,24 +17,33 @@ request here.
 python3 scripts/check-links.py          # local href/src references
 python3 scripts/gen-sitemap.py --check  # sitemap matches the files
 python3 scripts/check-contrast.py       # colour roles meet WCAG AA
+python3 -m py_compile scripts/*.py
+shfmt -i 2 -d scripts/*.sh && shellcheck scripts/*.sh
 ```
 
 ## Design system
 
-All four sites share `docs/m3.css`: Material 3 roles for colour, shape, state
-layers, motion and type, plus the top-bar control and the button components.
-Each page links it before its own `style.css` and seeds the colour roles there,
-once for light and once for dark. Page CSS is unlayered and therefore wins over
-the shared layers; components are unlayered so that a page's `a { color: … }`
-cannot repaint a filled button.
+All four sites share `docs/m3.css`: Material 3 roles for colour, shape, motion
+and type, plus the top-bar controls (`.theme-toggle`, `.nav .lang`), the button
+components and `.visually-hidden`. Each page links it before its own
+`style.css` and seeds the colour roles there, once for light and once for dark.
+Page CSS is unlayered and therefore wins over the shared layers; components are
+unlayered so that a page's `a { color: … }` cannot repaint a filled button.
+
+The token list is kept to what a component actually reads: shape steps, motion
+durations and easings, type sizes, and the colour roles `primary`,
+`on-primary`, `surface`, `surface-container-low` / `-container` /
+`-high`, `on-surface`, `on-surface-variant`, `outline`, `outline-variant`
+(plus `tertiary` where a page uses it). Add a role only together with the
+component that consumes it — an unused token is dead code like any other.
 
 When changing a page's look, keep the rule of one system and four looks: pick
 shape steps from the shared scale instead of writing a new radius, use the
-shared state-layer opacities, and keep at most one element that is unmistakably
-that page's own (iMail's postage stamp and offset shadows, Hy2droid's hairline
-readouts, the AmneziaWG browser frame). Then run `check-contrast.py`, which
-reads the seeds straight out of each `style.css` and fails on a pair below
-4.5:1 for text or 3:1 for a control edge.
+8% hover / 12% pressed state convention, and keep at most one element that is
+unmistakably that page's own (iMail's postage stamp and offset shadows,
+Hy2droid's hairline readouts, the AmneziaWG browser frame). Then run
+`check-contrast.py`, which reads the seeds straight out of each `style.css` and
+fails on a pair below 4.5:1 for text or 3:1 for a control edge.
 
 `docs/theme.js` boots `data-theme` before the first paint and drives every
 `.theme-toggle`; the `theme` key in localStorage is shared by all four sites,

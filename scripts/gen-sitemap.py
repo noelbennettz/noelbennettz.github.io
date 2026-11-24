@@ -7,10 +7,10 @@ result is deterministic, so CI can regenerate it and fail on a diff.
 import os
 import sys
 
-ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs"))
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.normpath(os.path.join(HERE, "..", "docs"))
 BASE = "https://noelbennettz.github.io"
 PREFERRED = ["index.html", "zh.html"]
-
 
 def urls():
     found = []
@@ -36,7 +36,6 @@ def urls():
 
     return sorted(set(found), key=key)
 
-
 def main():
     check = "--check" in sys.argv
     body = "".join(f"  <url><loc>{BASE}{path}</loc></url>\n" for path in urls())
@@ -53,14 +52,16 @@ def main():
         except OSError:
             current = ""
         if current != text:
-            print("docs/sitemap.xml is stale; run scripts/gen-sitemap.py", file=sys.stderr)
+            print(
+                "docs/sitemap.xml is stale; run scripts/gen-sitemap.py",
+                file=sys.stderr,
+            )
             return 1
         print("sitemap ok", file=sys.stderr)
         return 0
     open(path, "w", encoding="utf-8").write(text)
     print(f"wrote {path} ({len(urls())} URLs)", file=sys.stderr)
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

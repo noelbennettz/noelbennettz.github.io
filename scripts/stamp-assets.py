@@ -23,7 +23,9 @@ for base, _, files in os.walk(dst):
             continue
         path = os.path.join(base, name)
         text = open(path, encoding="utf-8").read()
-        stamped = assets.sub(lambda m: f"{m.group(1)}{m.group(2)}?v={version}{m.group(3)}", text)
+        stamped = assets.sub(
+            lambda m: f"{m.group(1)}{m.group(2)}?v={version}{m.group(3)}", text
+        )
         if stamped != text:
             open(path, "w", encoding="utf-8").write(stamped)
 print(f"stamped assets in {dst} with {version}", file=sys.stderr)

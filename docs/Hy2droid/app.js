@@ -7,9 +7,6 @@
 
   const assetMatchers = {
     arm64: (name) => name.includes("arm64-v8a"),
-    armeabi: (name) => name.includes("armeabi-v7a"),
-    x86_64: (name) => name.includes("x86_64"),
-    x86: (name) => /-x86-release\.apk$/.test(name),
     universal: (name) => name.includes("universal"),
   };
 
@@ -37,10 +34,6 @@
     setText("release-version-2", tag);
     setText("release-version-3", tag);
     if (date) setText("release-date", date);
-
-    document.querySelectorAll("[data-release-link]").forEach((link) => {
-      link.href = release.html_url;
-    });
 
     const assets = Array.isArray(release.assets) ? release.assets : [];
     document.querySelectorAll("[data-asset]").forEach((link) => {

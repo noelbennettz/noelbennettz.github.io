@@ -1,8 +1,8 @@
 /* m3.css — the shared Material 3 contract for every page on this domain.
 
    One system, four looks. The tokens below name the roles — colour, shape,
-   state layer, motion, elevation, type — and each page supplies its own seed
-   colour, its own fonts and one signature element.
+   motion, type — and each page supplies its own seed colour, its own fonts and
+   one signature element.
 
    Layout of the file: tokens and base rules sit inside @layer, so any rule a
    page writes (unlayered) always wins. The components at the bottom are
@@ -13,9 +13,9 @@
    Shape steps are fixed: none 0, xs 4, sm 8, md 12, lg 16, xl 28, full 999.
    A page chooses which steps it uses (iMail sits at the small end for its
    print look, Hy2droid in the middle) but never invents a radius.
-   State layers are one set of opacities for every page: hover 8, focus 10,
-   pressed 12. Contrast of every colour pair is checked by
-   scripts/check-contrast.py. */
+   State layers are one convention rather than tokens: hover 8% and pressed
+   12% of the primary role, written out where they are used. Contrast of every
+   colour pair is checked by scripts/check-contrast.py. */
 
 @layer m3.tokens, m3.base;
 
@@ -30,25 +30,11 @@
     --md-sys-shape-xl: 28px;
     --md-sys-shape-full: 999px;
 
-    /* State layers */
-    --md-sys-state-hover: 0.08;
-    --md-sys-state-focus: 0.10;
-    --md-sys-state-pressed: 0.12;
-
     /* Motion */
     --md-sys-motion-short: 150ms;
     --md-sys-motion-medium: 250ms;
-    --md-sys-motion-long: 400ms;
     --md-sys-easing-standard: cubic-bezier(0.2, 0, 0, 1);
     --md-sys-easing-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
-
-    /* Elevation (levels 0-3; higher levels also mean a tonal surface step) */
-    --md-sys-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.16),
-      0 1px 3px 1px rgba(0, 0, 0, 0.08);
-    --md-sys-elevation-2: 0 1px 2px rgba(0, 0, 0, 0.16),
-      0 2px 6px 2px rgba(0, 0, 0, 0.1);
-    --md-sys-elevation-3: 0 4px 8px 3px rgba(0, 0, 0, 0.12),
-      0 1px 3px rgba(0, 0, 0, 0.18);
 
     /* Type scale. Sizes only: each page keeps its own family, weight and
        tracking, which is where most of its character lives. */
@@ -64,10 +50,6 @@
        Pages override these in their own :root, which is unlayered. */
     --md-sys-color-primary: #3f5a00;
     --md-sys-color-on-primary: #ffffff;
-    --md-sys-color-primary-container: #dfe8c8;
-    --md-sys-color-on-primary-container: #1b2600;
-    --md-sys-color-tertiary: #1f5fd0;
-    --md-sys-color-on-tertiary: #ffffff;
     --md-sys-color-surface: #f4f2ec;
     --md-sys-color-surface-container-low: #efece2;
     --md-sys-color-surface-container: #e9e5d9;
@@ -76,16 +58,10 @@
     --md-sys-color-on-surface-variant: #5b5649;
     --md-sys-color-outline: #6d685e;
     --md-sys-color-outline-variant: #d7d0c1;
-    --md-sys-color-error: #b3261e;
-    --md-sys-color-on-error: #ffffff;
   }
   :root[data-theme="dark"] {
     --md-sys-color-primary: #c3dd8e;
     --md-sys-color-on-primary: #1b2600;
-    --md-sys-color-primary-container: #3f5a00;
-    --md-sys-color-on-primary-container: #dfe8c8;
-    --md-sys-color-tertiary: #a8c7ff;
-    --md-sys-color-on-tertiary: #002f6c;
     --md-sys-color-surface: #0e0e10;
     --md-sys-color-surface-container-low: #16161a;
     --md-sys-color-surface-container: #1c1c21;
@@ -94,8 +70,6 @@
     --md-sys-color-on-surface-variant: #a8a49a;
     --md-sys-color-outline: #8a8780;
     --md-sys-color-outline-variant: #2c2c31;
-    --md-sys-color-error: #ffb4ab;
-    --md-sys-color-on-error: #690005;
   }
 }
 
@@ -136,8 +110,21 @@
     text-decoration: none;
   }
   .skip:focus { left: 0; }
-}
 
+  /* Used for labels that only assistive technology should read. Two pages
+     carried their own copy of this before the shared layer existed. */
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
 
 /* Components are deliberately unlayered: a page rule such as
    `a { color: … }` must not be able to repaint a filled button, and a page

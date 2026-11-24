@@ -13,7 +13,8 @@ import os
 import re
 import sys
 
-DOCS = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs"))
+HERE = os.path.dirname(os.path.abspath(__file__))
+DOCS = os.path.normpath(os.path.join(HERE, "..", "docs"))
 ROLE = re.compile(r"--md-sys-color-([a-z-]+)\s*:\s*#([0-9a-fA-F]{3,8})\s*;")
 BLOCK = re.compile(r"([^{}]*)\{([^{}]*)\}")
 SITES = [
@@ -43,12 +44,10 @@ BORDER_PAIRS = [
     ("outline-variant", ["surface"], 1.2),
 ]
 
-
 def parse_hex(value):
     if len(value) == 3:
         value = "".join(ch * 2 for ch in value)
     return tuple(int(value[i:i + 2], 16) / 255 for i in (0, 2, 4))
-
 
 def luminance(rgb):
     def channel(c):
@@ -56,12 +55,10 @@ def luminance(rgb):
     r, g, b = (channel(c) for c in rgb)
     return 0.2126 * r + 0.7152 * g + 0.0722 * b
 
-
 def contrast(a, b):
     la, lb = luminance(parse_hex(a)), luminance(parse_hex(b))
     hi, lo = max(la, lb), min(la, lb)
     return (hi + 0.05) / (lo + 0.05)
-
 
 def read_palettes(path):
     text = open(path, encoding="utf-8").read()
@@ -91,7 +88,6 @@ def read_palettes(path):
             continue
         palettes[scheme].update(roles)
     return palettes, entries
-
 
 def main():
     problems = []
@@ -142,11 +138,13 @@ def main():
                         )
     if problems:
         print("\n".join(problems), file=sys.stderr)
-        print(f"{len(problems)} contrast problem(s) in {checked} pairs", file=sys.stderr)
+        print(
+            f"{len(problems)} contrast problem(s) in {checked} pairs",
+            file=sys.stderr,
+        )
         return 1
     print(f"contrast ok ({checked} pairs)", file=sys.stderr)
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())
