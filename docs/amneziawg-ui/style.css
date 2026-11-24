@@ -177,14 +177,7 @@ code, pre { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo,
   background: color-mix(in srgb, var(--md-sys-color-primary) 92%,
     var(--md-sys-color-on-primary));
 }
-.lang {
-  border: 1px solid var(--line-2);
-  border-radius: var(--md-sys-shape-full);
-  padding: 5px 12px;
-  font-size: 0.8rem !important;
-  white-space: nowrap;
-}
-.lang:hover { border-color: var(--peach); }
+/* The language switch is the shared .nav .lang control in m3.css. */
 @media (max-width: 900px) {
   .nav .hide-sm { display: none; }
   .site-header .container { min-height: 64px; }

@@ -171,12 +171,9 @@ code, pre { font-family: var(--mono); }
   text-decoration: none;
 }
 .nav a:hover { color: var(--red); }
-.lang {
-  border-bottom: 1px solid var(--red);
-  padding-bottom: 1px;
-}
-/* The shared control, held to this page's small shape step. */
-.theme-toggle {
+/* Both header controls are held to this page's small shape step. */
+.theme-toggle,
+.nav .lang {
   border-radius: var(--md-sys-shape-xs);
   font-family: var(--mono);
   font-size: var(--md-sys-type-label-sm-size);
