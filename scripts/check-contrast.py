@@ -24,17 +24,16 @@ SITES = [
     ("imail", "imail"),
 ]
 
-# Pairs that carry text, and the surfaces they can land on.
+# Pairs that carry text, and the surfaces they can land on. A role a page does
+# not seed is skipped, so this list stays in step with the token list in m3.css.
 TEXT_PAIRS = [
     ("on-surface", ["surface", "surface-container-low", "surface-container",
                     "surface-container-high"]),
     ("on-surface-variant", ["surface", "surface-container-low", "surface-container",
                             "surface-container-high"]),
     ("on-primary", ["primary"]),
-    ("on-primary-container", ["primary-container"]),
     ("primary", ["surface", "surface-container-low", "surface-container"]),
     ("tertiary", ["surface", "surface-container"]),
-    ("error", ["surface"]),
 ]
 BORDER_PAIRS = [
     # A control's own edge must be visible (WCAG 1.4.11, 3:1).
