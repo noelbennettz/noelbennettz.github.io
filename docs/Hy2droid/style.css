@@ -1,17 +1,38 @@
-/* Hy2droid — signal/instrument theme. Dark only, no external assets. */
+/* Hy2droid — signal/instrument theme on the shared M3 contract (m3.css).
+   Seed: lime. Signature: 1px hairlines and mono readouts; no tonal surfaces
+   stacked deeper than two levels, so it still reads as an instrument panel
+   rather than a stack of Material cards. */
 
 :root {
   color-scheme: dark;
-  --bg: #070907;
-  --bg-2: #0a0d0a;
-  --panel: #0e130e;
-  --panel-2: #111711;
-  --line: #242c23;
-  --line-2: #33402f;
-  --text: #e7efe4;
-  --muted: #93a18f;
-  --dim: #808f7b;
-  --lime: #c8f25a;
+
+  --md-sys-color-primary: #c8f25a;
+  --md-sys-color-on-primary: #101a06;
+  --md-sys-color-primary-container: #2a3a0c;
+  --md-sys-color-on-primary-container: #d9f786;
+  --md-sys-color-surface: #070907;
+  --md-sys-color-surface-container-low: #0a0d0a;
+  --md-sys-color-surface-container: #0e130e;
+  --md-sys-color-surface-container-high: #141a13;
+  --md-sys-color-on-surface: #e7efe4;
+  --md-sys-color-on-surface-variant: #a9b7a4;
+  --md-sys-color-outline: #6f7d6b;
+  --md-sys-color-outline-variant: #242c23;
+  --md-sys-color-error: #ffb86b;
+  --md-sys-color-on-error: #2a1400;
+
+  /* Aliases: the rest of this file still speaks the old names. */
+  --bg: var(--md-sys-color-surface);
+  --bg-2: var(--md-sys-color-surface-container-low);
+  --panel: var(--md-sys-color-surface-container);
+  --panel-2: var(--md-sys-color-surface-container-high);
+  --line: var(--md-sys-color-outline-variant);
+  --line-2: var(--md-sys-color-outline);
+  --text: var(--md-sys-color-on-surface);
+  --muted: var(--md-sys-color-on-surface-variant);
+  --dim: var(--md-sys-color-on-surface-variant);
+  --lime: var(--md-sys-color-primary);
+
   --lime-2: #a7d63f;
   --warn: #ffb86b;
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
@@ -23,28 +44,24 @@
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --bg: #f2f1ea;
-  --bg-2: #e9e8df;
-  --panel: #ffffff;
-  --panel-2: #f6f5ef;
-  --line: #d5d2c6;
-  --line-2: #b9b6a8;
-  --text: #15160f;
-  --muted: #5e6155;
-  --dim: #7a7d70;
-  --lime: #4f7a00;
+
+  --md-sys-color-primary: #4a7300;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #d7e8b0;
+  --md-sys-color-on-primary-container: #1b2600;
+  --md-sys-color-surface: #f2f1ea;
+  --md-sys-color-surface-container-low: #e9e8df;
+  --md-sys-color-surface-container: #ffffff;
+  --md-sys-color-surface-container-high: #f6f5ef;
+  --md-sys-color-on-surface: #15160f;
+  --md-sys-color-on-surface-variant: #54584c;
+  --md-sys-color-outline: #7a7d70;
+  --md-sys-color-outline-variant: #d5d2c6;
+  --md-sys-color-error: #a35b00;
+  --md-sys-color-on-error: #ffffff;
+
   --lime-2: #416600;
   --warn: #a35b00;
-}
-:root[data-theme="light"] .btn-primary {
-  background: var(--text);
-  border-color: var(--text);
-  color: var(--bg);
-}
-:root[data-theme="light"] .btn-primary:hover {
-  background: var(--lime);
-  border-color: var(--lime);
-  color: #081007;
 }
 :root[data-theme="light"] .phone { box-shadow: 0 26px 60px rgba(23, 21, 15, 0.18); }
 
@@ -75,17 +92,6 @@ code, pre { font-family: var(--mono); }
   width: min(100% - 48px, var(--max));
   margin-inline: auto;
 }
-
-.skip {
-  position: absolute;
-  left: -9999px;
-  top: 0;
-  background: var(--lime);
-  color: #081007;
-  padding: 10px 16px;
-  z-index: 100;
-}
-.skip:focus { left: 0; }
 
 /* Header */
 
@@ -138,26 +144,15 @@ code, pre { font-family: var(--mono); }
 .nav a:hover { color: var(--lime); text-decoration: none; }
 .lang {
   border: 1px solid var(--line-2);
-  padding: 4px 10px;
+  border-radius: var(--md-sys-shape-xs);
+  padding: 6px 10px;
   white-space: nowrap;
   flex-shrink: 0;
 }
-.lang:hover { border-color: var(--lime); }
-.theme-toggle {
-  flex-shrink: 0;
-  min-height: 30px;
-  padding: 6px 12px;
-  border: 1px solid var(--dim);
-  border-radius: 999px;
-  background: none;
-  color: var(--muted);
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
+.lang:hover {
+  border-color: var(--lime);
+  background-color: color-mix(in srgb, var(--lime) 8%, transparent);
 }
-.theme-toggle:hover { color: var(--text); border-color: var(--text); }
 
 @media (max-width: 820px) {
   .nav .hide-sm { display: none; }
@@ -232,29 +227,13 @@ h1 .grad {
   gap: 12px;
   margin-bottom: 30px;
 }
+/* Structure, shape and colours come from m3.css; the instrument voice stays. */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 13px 19px;
-  border: 1px solid var(--line-2);
-  border-radius: 2px;
-  background: transparent;
-  color: var(--text);
   font-family: var(--mono);
-  font-size: 0.66rem;
+  font-size: var(--md-sys-type-label-md-size);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
-.btn:hover { border-color: var(--lime); color: var(--lime); text-decoration: none; }
-.btn-primary {
-  background: var(--lime);
-  border-color: var(--lime);
-  color: #0a1007;
-}
-.btn-primary:hover { background: var(--text); border-color: var(--text); color: #0a1007; }
-.btn svg { width: 15px; height: 15px; }
 
 .pills {
   display: flex;
@@ -449,6 +428,7 @@ section:not(.hero) { counter-increment: sec; }
 }
 .bracket {
   border: 1px solid var(--line-2);
+  border-radius: var(--md-sys-shape-md);
   background: var(--panel);
   padding: 26px;
 }
@@ -487,6 +467,7 @@ section:not(.hero) { counter-increment: sec; }
   justify-content: space-between;
   gap: 20px;
   border: 1px solid var(--line-2);
+  border-radius: var(--md-sys-shape-md);
   background: var(--panel);
   padding: 24px 26px;
 }
@@ -570,6 +551,7 @@ section:not(.hero) { counter-increment: sec; }
   margin-top: 20px;
   border: 1px solid var(--line);
   border-left: 2px solid var(--warn);
+  border-radius: var(--md-sys-shape-sm);
   padding: 14px 16px;
   color: var(--muted);
   font-size: 0.88rem;
@@ -590,7 +572,7 @@ section:not(.hero) { counter-increment: sec; }
   width: 100%;
   height: auto;
   border: 1px solid var(--line-2);
-  border-radius: 18px;
+  border-radius: var(--md-sys-shape-lg);
   background: var(--panel);
 }
 .shots figcaption {
@@ -645,6 +627,7 @@ code {
   color: var(--lime);
   background: var(--panel);
   border: 1px solid var(--line);
+  border-radius: var(--md-sys-shape-xs);
   padding: 1px 4px;
 }
 

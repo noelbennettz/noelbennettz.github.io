@@ -1,0 +1,231 @@
+/* m3.css — the shared Material 3 contract for every page on this domain.
+
+   One system, four looks. The tokens below name the roles — colour, shape,
+   state layer, motion, elevation, type — and each page supplies its own seed
+   colour, its own fonts and one signature element.
+
+   Layout of the file: tokens and base rules sit inside @layer, so any rule a
+   page writes (unlayered) always wins. The components at the bottom are
+   unlayered on purpose: a page's `a { color: … }` must not be able to repaint
+   a filled button, and a page that really wants to change a component adds a
+   later rule of its own.
+
+   Shape steps are fixed: none 0, xs 4, sm 8, md 12, lg 16, xl 28, full 999.
+   A page chooses which steps it uses (iMail sits at the small end for its
+   print look, Hy2droid in the middle) but never invents a radius.
+   State layers are one set of opacities for every page: hover 8, focus 10,
+   pressed 12. Contrast of every colour pair is checked by
+   scripts/check-contrast.py. */
+
+@layer m3.tokens, m3.base;
+
+@layer m3.tokens {
+  :root {
+    /* Shape */
+    --md-sys-shape-none: 0px;
+    --md-sys-shape-xs: 4px;
+    --md-sys-shape-sm: 8px;
+    --md-sys-shape-md: 12px;
+    --md-sys-shape-lg: 16px;
+    --md-sys-shape-xl: 28px;
+    --md-sys-shape-full: 999px;
+
+    /* State layers */
+    --md-sys-state-hover: 0.08;
+    --md-sys-state-focus: 0.10;
+    --md-sys-state-pressed: 0.12;
+
+    /* Motion */
+    --md-sys-motion-short: 150ms;
+    --md-sys-motion-medium: 250ms;
+    --md-sys-motion-long: 400ms;
+    --md-sys-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+    --md-sys-easing-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
+
+    /* Elevation (levels 0-3; higher levels also mean a tonal surface step) */
+    --md-sys-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.16),
+      0 1px 3px 1px rgba(0, 0, 0, 0.08);
+    --md-sys-elevation-2: 0 1px 2px rgba(0, 0, 0, 0.16),
+      0 2px 6px 2px rgba(0, 0, 0, 0.1);
+    --md-sys-elevation-3: 0 4px 8px 3px rgba(0, 0, 0, 0.12),
+      0 1px 3px rgba(0, 0, 0, 0.18);
+
+    /* Type scale. Sizes only: each page keeps its own family, weight and
+       tracking, which is where most of its character lives. */
+    --md-sys-type-display-size: clamp(2.5rem, 5vw, 3.75rem);
+    --md-sys-type-headline-size: clamp(1.75rem, 3.2vw, 2.5rem);
+    --md-sys-type-title-size: 1.25rem;
+    --md-sys-type-body-size: 1rem;
+    --md-sys-type-label-lg-size: 0.875rem;
+    --md-sys-type-label-md-size: 0.75rem;
+    --md-sys-type-label-sm-size: 0.6875rem;
+
+    /* Colour roles — a fallback palette in case a page forgets to seed one.
+       Pages override these in their own :root, which is unlayered. */
+    --md-sys-color-primary: #3f5a00;
+    --md-sys-color-on-primary: #ffffff;
+    --md-sys-color-primary-container: #dfe8c8;
+    --md-sys-color-on-primary-container: #1b2600;
+    --md-sys-color-tertiary: #1f5fd0;
+    --md-sys-color-on-tertiary: #ffffff;
+    --md-sys-color-surface: #f4f2ec;
+    --md-sys-color-surface-container-low: #efece2;
+    --md-sys-color-surface-container: #e9e5d9;
+    --md-sys-color-surface-container-high: #e3ded0;
+    --md-sys-color-on-surface: #141311;
+    --md-sys-color-on-surface-variant: #5b5649;
+    --md-sys-color-outline: #6d685e;
+    --md-sys-color-outline-variant: #d7d0c1;
+    --md-sys-color-error: #b3261e;
+    --md-sys-color-on-error: #ffffff;
+  }
+  :root[data-theme="dark"] {
+    --md-sys-color-primary: #c3dd8e;
+    --md-sys-color-on-primary: #1b2600;
+    --md-sys-color-primary-container: #3f5a00;
+    --md-sys-color-on-primary-container: #dfe8c8;
+    --md-sys-color-tertiary: #a8c7ff;
+    --md-sys-color-on-tertiary: #002f6c;
+    --md-sys-color-surface: #0e0e10;
+    --md-sys-color-surface-container-low: #16161a;
+    --md-sys-color-surface-container: #1c1c21;
+    --md-sys-color-surface-container-high: #232329;
+    --md-sys-color-on-surface: #ece9e1;
+    --md-sys-color-on-surface-variant: #a8a49a;
+    --md-sys-color-outline: #8a8780;
+    --md-sys-color-outline-variant: #2c2c31;
+    --md-sys-color-error: #ffb4ab;
+    --md-sys-color-on-error: #690005;
+  }
+}
+
+@layer m3.base {
+  * { box-sizing: border-box; }
+
+  /* The one motion rule every page shares: honour the system setting. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Focus was missing on all four pages. The ring is the primary role, so it
+     changes with the seed instead of being a fixed blue. */
+  :where(a[href], button, summary, [tabindex]):focus-visible {
+    outline: 3px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+    border-radius: var(--md-sys-shape-xs);
+  }
+
+  .skip {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    padding: 12px 20px;
+    border-radius: 0 0 var(--md-sys-shape-sm) 0;
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    font-size: var(--md-sys-type-label-lg-size);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .skip:focus { left: 0; }
+}
+
+
+/* Components are deliberately unlayered: a page rule such as
+   `a { color: … }` must not be able to repaint a filled button, and a page
+   that wants to override a component should do it by adding a later rule. */
+
+/* One theme control for the whole domain: an outlined M3 button sized for a
+   top app bar. Label and aria state come from theme.js. */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-full);
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  font-family: inherit;
+  font-size: var(--md-sys-type-label-lg-size);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background-color var(--md-sys-motion-short) var(--md-sys-easing-standard),
+    border-color var(--md-sys-motion-short) var(--md-sys-easing-standard),
+    color var(--md-sys-motion-short) var(--md-sys-easing-standard);
+}
+.theme-toggle:hover {
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+  border-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-surface);
+}
+.theme-toggle:active {
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
+}
+
+/* Buttons: shared structure and colour roles. Pages keep their own family,
+   weight and tracking on top — that is the signature, not the box. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 0 24px;
+  border: 1px solid transparent;
+  border-radius: var(--md-sys-shape-full);
+  background: transparent;
+  color: var(--md-sys-color-on-surface);
+  font-size: var(--md-sys-type-label-lg-size);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--md-sys-motion-short) var(--md-sys-easing-standard),
+    border-color var(--md-sys-motion-short) var(--md-sys-easing-standard),
+    color var(--md-sys-motion-short) var(--md-sys-easing-standard);
+}
+.btn:hover { text-decoration: none; }
+
+/* Filled: the primary action of a page. */
+.btn-primary {
+  background: var(--md-sys-color-primary);
+  border-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--md-sys-color-primary) 92%,
+    var(--md-sys-color-on-primary));
+  border-color: transparent;
+  color: var(--md-sys-color-on-primary);
+}
+.btn-primary:active {
+  background: color-mix(in srgb, var(--md-sys-color-primary) 88%,
+    var(--md-sys-color-on-primary));
+}
+
+/* Outlined: the secondary action. */
+.btn:not(.btn-primary) {
+  border-color: var(--md-sys-color-outline);
+  color: var(--md-sys-color-on-surface);
+}
+.btn:not(.btn-primary):hover {
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+  border-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-surface);
+}
+
+.btn svg { width: 18px; height: 18px; flex-shrink: 0; }

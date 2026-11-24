@@ -25,6 +25,8 @@ jobs:
         run: python3 scripts/check-links.py
       - name: Check sitemap
         run: python3 scripts/gen-sitemap.py --check
+      - name: Check colour contrast
+        run: python3 scripts/check-contrast.py
       - name: Compile the helper scripts
         run: python3 -m py_compile scripts/*.py
       - name: Stage a preview

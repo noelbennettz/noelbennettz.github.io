@@ -11,32 +11,8 @@
 <link rel="alternate" hreflang="zh-Hant" href="zh.html">
 <link rel="canonical" href="https://noelbennettz.github.io/">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<script>
-(function () {
-  var root = document.documentElement;
-  try {
-    var saved = localStorage.getItem("theme");
-    root.dataset.theme = saved ||
-      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-  } catch (e) { root.dataset.theme = "light"; }
-  document.addEventListener("DOMContentLoaded", function () {
-    var btn = document.querySelector(".theme-toggle");
-    if (!btn) return;
-    function render() {
-      var dark = root.dataset.theme === "dark";
-      btn.textContent = dark ? "Light" : "Dark";
-      btn.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
-      btn.setAttribute("aria-pressed", dark ? "true" : "false");
-    }
-    btn.addEventListener("click", function () {
-      root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
-      try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
-      render();
-    });
-    render();
-  });
-})();
-</script>
+<script src="theme.js"></script>
+<link rel="stylesheet" href="m3.css">
 <link rel="stylesheet" href="style.css">
 <meta property="og:type" content="website">
 <meta property="og:title" content="noelbennettz — open-source network software">

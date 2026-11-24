@@ -1,5 +1,9 @@
-/* AmneziaWG Web UI — dark product style, inspired by the Amnezia visual language.
-   Original layout, copy and graphics; IBM Plex Sans is self-hosted under the OFL. */
+/* AmneziaWG Web UI — the product page on the shared M3 contract (m3.css).
+   Seed: orange (plus lime and pink as the tertiary accents the panel itself
+   uses). Signature: the browser frame and the radial hero glow; it is the only
+   page that leans on the larger end of the shape scale.
+
+   IBM Plex Sans is self-hosted under the OFL; no external font requests. */
 
 @font-face {
   font-family: "IBM Plex Sans";
@@ -25,40 +29,66 @@
 
 :root {
   color-scheme: dark;
-  --bg: #0e0e11;
-  --bg-2: #101012;
-  --surface: #17181c;
-  --surface-2: #1c1d21;
-  --line: #2b2b2b;
-  --line-2: #3a3b40;
-  --text: #eaeaec;
-  --muted: #878b91;
-  --dim: #5f6268;
-  --orange: #ed700a;
-  --peach: #fbb26a;
-  --lime: #aef151;
-  --pink: #cf0070;
+
+  --md-sys-color-primary: #ffb27a;
+  --md-sys-color-on-primary: #3d1c00;
+  --md-sys-color-primary-container: #5a2a00;
+  --md-sys-color-on-primary-container: #ffdcc2;
+  --md-sys-color-tertiary: #c8f77f;
+  --md-sys-color-on-tertiary: #173000;
+  --md-sys-color-surface: #0e0e11;
+  --md-sys-color-surface-container-low: #101012;
+  --md-sys-color-surface-container: #17181c;
+  --md-sys-color-surface-container-high: #1c1d21;
+  --md-sys-color-on-surface: #eaeaec;
+  --md-sys-color-on-surface-variant: #a3a7ae;
+  --md-sys-color-outline: #7c8087;
+  --md-sys-color-outline-variant: #2b2b2b;
+  --md-sys-color-error: #ffb4ab;
+  --md-sys-color-on-error: #690005;
+
+  /* Aliases: the rest of this file still speaks the old names. */
+  --bg: var(--md-sys-color-surface);
+  --bg-2: var(--md-sys-color-surface-container-low);
+  --surface: var(--md-sys-color-surface-container);
+  --surface-2: var(--md-sys-color-surface-container-high);
+  --line: var(--md-sys-color-outline-variant);
+  --line-2: var(--md-sys-color-outline);
+  --text: var(--md-sys-color-on-surface);
+  --muted: var(--md-sys-color-on-surface-variant);
+  --dim: var(--md-sys-color-on-surface-variant);
+
+  --orange: var(--md-sys-color-primary);
+  --peach: var(--md-sys-color-primary);
+  --lime: var(--md-sys-color-tertiary);
+  --pink: #ff9ecb;
+
   --max: 1200px;
-  --radius: 20px;
+  --radius: var(--md-sys-shape-lg);
 }
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --bg: #f3f3f5;
-  --bg-2: #eaeaee;
-  --surface: #ffffff;
-  --surface-2: #f5f5f7;
-  --line: #d8d8de;
-  --line-2: #c2c2ca;
-  --text: #111114;
-  --muted: #5e6069;
-  --dim: #85858e;
-  --orange: #b95a00;
-  --peach: #9a4a00;
-  --lime: #4f7a00;
+
+  --md-sys-color-primary: #a84800;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #ffdcc2;
+  --md-sys-color-on-primary-container: #351000;
+  --md-sys-color-tertiary: #456b00;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-surface: #f3f3f5;
+  --md-sys-color-surface-container-low: #eaeaee;
+  --md-sys-color-surface-container: #ffffff;
+  --md-sys-color-surface-container-high: #f5f5f7;
+  --md-sys-color-on-surface: #111114;
+  --md-sys-color-on-surface-variant: #52555c;
+  --md-sys-color-outline: #7a7d85;
+  --md-sys-color-outline-variant: #d8d8de;
+  --md-sys-color-error: #b3261e;
+  --md-sys-color-on-error: #ffffff;
+
   --pink: #a3005a;
 }
-:root[data-theme="light"] .btn-primary:hover { color: #fff; }
 :root[data-theme="light"] .browser { box-shadow: 0 40px 100px rgba(20, 20, 40, 0.18); }
 :root[data-theme="light"] .hero::before { opacity: 0.55; }
 :root[data-theme="light"] .hero::after { opacity: 0.45; }
@@ -94,16 +124,6 @@ code, pre { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo,
   margin-inline: auto;
 }
 
-.skip {
-  position: absolute;
-  left: -9999px;
-  top: 0;
-  z-index: 100;
-  padding: 10px 16px;
-  background: var(--text);
-  color: var(--bg);
-}
-
 /* Header */
 
 .site-header {
@@ -135,7 +155,7 @@ code, pre { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo,
 .brand img {
   width: 34px;
   height: 34px;
-  border-radius: 10px;
+  border-radius: var(--md-sys-shape-md);
 }
 .nav {
   display: flex;
@@ -147,34 +167,24 @@ code, pre { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo,
 .nav a:hover { color: var(--text); text-decoration: none; }
 .nav-cta {
   padding: 9px 16px;
-  border-radius: 999px;
-  background: var(--text);
-  color: var(--bg) !important;
+  border-radius: var(--md-sys-shape-full);
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary) !important;
   font-weight: 600;
+  transition: background-color var(--md-sys-motion-short) var(--md-sys-easing-standard);
 }
-.nav-cta:hover { background: var(--peach); }
+.nav-cta:hover {
+  background: color-mix(in srgb, var(--md-sys-color-primary) 92%,
+    var(--md-sys-color-on-primary));
+}
 .lang {
   border: 1px solid var(--line-2);
-  border-radius: 999px;
+  border-radius: var(--md-sys-shape-full);
   padding: 5px 12px;
   font-size: 0.8rem !important;
   white-space: nowrap;
 }
 .lang:hover { border-color: var(--peach); }
-.theme-toggle {
-  min-height: 30px;
-  padding: 6px 12px;
-  border: 1px solid var(--line-2);
-  border-radius: 999px;
-  background: none;
-  color: var(--muted);
-  font-family: inherit;
-  font-size: 0.72rem;
-  font-weight: 500;
-  cursor: pointer;
-}
-.theme-toggle:hover { color: var(--text); border-color: var(--peach); }
-
 @media (max-width: 900px) {
   .nav .hide-sm { display: none; }
   .site-header .container { min-height: 64px; }
@@ -241,7 +251,7 @@ code, pre { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo,
   gap: 8px;
   padding: 6px 14px;
   border: 1px solid var(--line-2);
-  border-radius: 999px;
+  border-radius: var(--md-sys-shape-full);
   background: color-mix(in srgb, var(--surface) 78%, transparent);
   color: var(--muted);
   font-size: 0.82rem;
@@ -281,23 +291,7 @@ h1 .grad {
   gap: 12px;
   margin-bottom: 24px;
 }
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 13px 24px;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-}
-.btn:hover { text-decoration: none; }
-.btn-primary { background: var(--text); color: var(--bg); }
-.btn-primary:hover { background: var(--peach); }
-.btn-ghost { border-color: var(--line-2); color: var(--text); background: transparent; }
-.btn-ghost:hover { border-color: var(--peach); color: var(--peach); }
-.btn svg { width: 17px; height: 17px; }
+.btn { font-weight: 600; }
 
 .pills {
   display: flex;
@@ -309,7 +303,7 @@ h1 .grad {
 .pill {
   padding: 5px 12px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--md-sys-shape-full);
   color: var(--muted);
   font-size: 0.78rem;
   background: color-mix(in srgb, var(--surface) 78%, transparent);
@@ -324,7 +318,7 @@ h1 .grad {
   margin: 0 auto;
   padding: 10px;
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--md-sys-shape-xl);
   background: color-mix(in srgb, var(--surface) 92%, transparent);
   box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55);
   text-align: left;
@@ -349,7 +343,7 @@ h1 .grad {
   margin-left: 10px;
   padding: 5px 12px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--md-sys-shape-full);
   color: var(--dim);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.68rem;
@@ -360,7 +354,7 @@ h1 .grad {
 .browser img {
   width: 100%;
   height: auto;
-  border-radius: 12px;
+  border-radius: var(--md-sys-shape-md);
   border: 1px solid var(--line);
 }
 
@@ -405,9 +399,13 @@ section.alt { background: var(--bg-2); border-block: 1px solid var(--line); }
   border-radius: var(--radius);
   background: var(--surface);
   overflow: hidden;
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  transition: border-color var(--md-sys-motion-short) var(--md-sys-easing-standard),
+    background-color var(--md-sys-motion-short) var(--md-sys-easing-standard);
 }
-.card:hover { border-color: var(--line-2); transform: translateY(-2px); }
+.card:hover {
+  border-color: var(--line-2);
+  background-color: color-mix(in srgb, var(--orange) 6%, var(--surface));
+}
 .card::after {
   content: "";
   position: absolute;
@@ -445,7 +443,7 @@ section.alt { background: var(--bg-2); border-block: 1px solid var(--line); }
   display: grid;
   place-items: center;
   border: 1px solid var(--line-2);
-  border-radius: 12px;
+  border-radius: var(--md-sys-shape-md);
   background: var(--surface-2);
   color: var(--peach);
 }
@@ -501,9 +499,9 @@ section.alt { background: var(--bg-2); border-block: 1px solid var(--line); }
   width: 36px;
   height: 36px;
   margin-bottom: 14px;
-  border-radius: 10px;
+  border-radius: var(--md-sys-shape-md);
   background: linear-gradient(135deg, var(--orange), var(--pink));
-  color: #fff;
+  color: var(--md-sys-color-on-primary);
   font-size: 0.78rem;
   font-weight: 700;
 }
@@ -516,7 +514,7 @@ pre {
   margin: 0;
   padding: 18px 20px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--md-sys-shape-md);
   background: #0a0a0c;
   color: #d7d8db;
   font-size: 0.84rem;
@@ -533,7 +531,7 @@ pre code { background: none; border: 0; padding: 0; color: inherit; font-size: i
   right: 0;
   padding: 5px 10px;
   border: 1px solid var(--line-2);
-  border-radius: 999px;
+  border-radius: var(--md-sys-shape-full);
   background: var(--surface-2);
   color: var(--muted);
   font-family: inherit;
@@ -548,7 +546,7 @@ pre code { background: none; border: 0; padding: 0; color: inherit; font-size: i
   padding: 16px 20px;
   border: 1px solid var(--line);
   border-left: 2px solid var(--orange);
-  border-radius: 0 14px 14px 0;
+  border-radius: 0 var(--md-sys-shape-md) var(--md-sys-shape-md) 0;
   color: var(--muted);
   background: var(--surface);
   font-size: 0.92rem;
@@ -588,7 +586,7 @@ pre code { background: none; border: 0; padding: 0; color: inherit; font-size: i
 .faq { display: grid; gap: 10px; max-width: 880px; margin-inline: auto; }
 .faq details {
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--md-sys-shape-lg);
   background: var(--surface);
   padding: 18px 22px;
 }
@@ -613,7 +611,7 @@ pre code { background: none; border: 0; padding: 0; color: inherit; font-size: i
 code {
   padding: 1px 6px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--md-sys-shape-xs);
   background: var(--surface-2);
   color: var(--peach);
   font-size: 0.86em;

@@ -19,8 +19,16 @@ to the other — with no build step, deployed to GitHub Pages by
 `.github/workflows/pages.yml`. `docs/sitemap.xml` lists all eight pages and
 `docs/robots.txt` points crawlers at it.
 
-Before a pull request, run `python3 scripts/check-links.py` and
-`python3 scripts/gen-sitemap.py --check`. The deploy stamps CSS/JS references
+The four pages share one design contract. `docs/m3.css` holds the Material 3
+roles (colour, shape, state, motion, type) and the shared top-bar and button
+components; `docs/theme.js` boots the theme before the first paint. Each page
+seeds the roles in its own `style.css` and keeps its own fonts and one
+signature element, which is why the sites look related without looking the
+same. Run `python3 scripts/check-contrast.py` after changing a colour.
+
+Before a pull request, run `python3 scripts/check-links.py`,
+`python3 scripts/gen-sitemap.py --check` and
+`python3 scripts/check-contrast.py`. The deploy stamps CSS/JS references
 with the commit SHA; `checks.yml` runs the same checks in CI and asserts that
 the project repositories' Pages sites stay disabled. See
 [CONTRIBUTING.md](CONTRIBUTING.md). A 404 page lists the three project sites.

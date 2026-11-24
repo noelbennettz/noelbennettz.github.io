@@ -30,10 +30,11 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
-      - name: Verify links and sitemap
+      - name: Verify links, sitemap and contrast
         run: |
           python3 scripts/check-links.py
           python3 scripts/gen-sitemap.py --check
+          python3 scripts/check-contrast.py
 
       # The deployed tree is a copy: asset references carry the commit so a CSS
       # change is not hidden behind a cached stylesheet.
