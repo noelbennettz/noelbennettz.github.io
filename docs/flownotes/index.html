@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow Notes — self-hosted Markdown notes with full-text search</title>
+<meta name="description" content="Flow Notes is a self-hosted note server: every note is a plain Markdown file, folders are the sidebar, SQLite FTS5 is a rebuildable index, and the browser client makes no external requests at all.">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#191919" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="canonical" href="https://noelbennettz.github.io/flownotes/">
+<link rel="alternate" hreflang="zh-Hant" href="zh.html">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<script src="../theme.js"></script>
+<link rel="stylesheet" href="../m3.css">
+<link rel="stylesheet" href="style.css">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Flow Notes — notes that stay on your disk">
+<meta property="og:description" content="Plain Markdown files, a rebuildable FTS5 index and an offline-first editor. One container, one volume, no CDN.">
+<meta property="og:url" content="https://noelbennettz.github.io/flownotes/">
+<meta property="og:image" content="https://noelbennettz.github.io/flownotes/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<svg class="visually-hidden" aria-hidden="true" focusable="false">
+  <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h4"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.4"/><path d="m16 16 4.2 4.2"/></symbol>
+  <symbol id="i-command" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M13 15h4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.2 2.7-5.5 6-5.5s6 2.3 6 5.5"/><path d="M16 5.5a3 3 0 0 1 0 5.8M17 14.8c2.4.5 4 2.4 4 5.2"/></symbol>
+  <symbol id="i-offline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M8.5 15.5a5 5 0 0 1 7 0M5 12a10 10 0 0 1 5-2.6M14 9.4A10 10 0 0 1 19 12"/><path d="M12 19h.01"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2M12 3.4c2.4 2.4 3.7 5.4 3.7 8.6S14.4 18.2 12 20.6c-2.4-2.4-3.7-5.4-3.7-8.6S9.6 5.8 12 3.4Z"/></symbol>
+  <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7v10l8 4 8-4V7z"/><path d="m4 7 8 4 8-4M12 21V11"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M13 15h4"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4m8-8 4 4-4 4M14 4l-4 16"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+</svg>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="./">
+      <img src="assets/icon.svg" alt="" width="26" height="26">
+      Flow Notes
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a class="hide-sm" href="#features">Features</a>
+      <a class="hide-sm" href="#screens">Screenshots</a>
+      <a class="hide-sm" href="#deploy">Deploy</a>
+      <a class="hide-sm" href="https://github.com/noelbennettz/flownotes">GitHub</a>
+      <button class="theme-toggle" type="button" aria-pressed="false">Dark</button>
+      <a class="lang" href="zh.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero">
+  <div class="container">
+    <div>
+      <p class="eyebrow">Self-hosted · Docker · MIT</p>
+      <h1>Notes, on<br><em>your own disk.</em></h1>
+      <p class="lede">
+        Flow Notes is a note server you run yourself. Every note is a plain
+        Markdown file under <code>data/notes/&lt;account&gt;/</code>, the folders
+        on disk are the sidebar, and SQLite holds only the accounts and a search
+        index you can throw away and rebuild. The browser client fetches nothing
+        from the network — no CDN, no web fonts, no remote icons.
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#deploy">
+          <svg aria-hidden="true"><use href="#i-terminal"/></svg>
+          Deploy with Compose
+        </a>
+        <a class="btn" href="https://github.com/noelbennettz/flownotes">
+          <svg aria-hidden="true"><use href="#i-code"/></svg>
+          Source &amp; docs
+        </a>
+      </div>
+      <ul class="pills">
+        <li>MIT</li>
+        <li>7 UI languages</li>
+        <li>SQLite FTS5</li>
+        <li>Multi-user</li>
+        <li>~170 MB image</li>
+        <li>Zero external requests</li>
+      </ul>
+    </div>
+    <div class="sheet">
+      <div class="sheet__bar" aria-hidden="true">
+        <span></span><span></span><span></span>
+        <div class="sheet__path">data/notes/admin/Work/2026/Project plan.md</div>
+      </div>
+      <img class="only-light" src="assets/main-light.png" width="1440" height="900" alt="Flow Notes with the sidebar open: folders, a selected note in the tree and the editor showing headings, a task list and a code block">
+      <img class="only-dark" src="assets/main-dark.png" width="1440" height="900" alt="The same note in the dark theme">
+    </div>
+  </div>
+</section>
+
+
+<section id="features" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>What it does</h2>
+      <p>Storage, search, editing and accounts — and what each of them refuses to do.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-file"/></svg></div>
+        <h3>Files first</h3>
+        <p>One Markdown file per note, one folder per sidebar folder, no hidden format. Edit them over SSH; the tree and the index catch up within two seconds.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-search"/></svg></div>
+        <h3>Search you can rebuild</h3>
+        <p>SQLite FTS5 with <code>snippet()</code> excerpts and highlighted hits, plus a substring fallback so Chinese, Japanese and Korean words still match. Delete the index and resync.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-command"/></svg></div>
+        <h3>An editor that speaks Markdown</h3>
+        <p>Tiptap with a Markdown round trip. <code>/</code> opens 17 commands; <code># </code>, <code>- </code>, <code>1. </code>, <code>&gt; </code>, <code>---</code> and a fence convert as you type; pasted screenshots are uploaded and inserted.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-users"/></svg></div>
+        <h3>Accounts with their own space</h3>
+        <p>Each account owns <code>notes/&lt;name&gt;/</code> and <code>uploads/&lt;name&gt;/</code>, and the index is filtered by owner. Administrators add, disable and delete accounts; deleting moves the files to <code>data/trash/</code>.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-offline"/></svg></div>
+        <h3>Offline by construction</h3>
+        <p>The editor bundle is built locally with esbuild, every icon is an inline SVG, and the server sends <code>default-src 'self'</code>. A browser that cannot reach the internet still gets the whole interface.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-globe"/></svg></div>
+        <h3>Seven languages, RTL included</h3>
+        <p>English, Arabic, Spanish, French, Russian and both Chinese scripts, with a full right-to-left layout for Arabic. Light, dark or follow the system, and six accent tones.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-save"/></svg></div>
+        <h3>Autosave that survives a closed tab</h3>
+        <p>Edits save 600 ms after the last keystroke; a pending change is flushed with <code>keepalive</code> when the page is hidden. Every note can also leave as a ZIP of Markdown.</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-box"/></svg></div>
+        <h3>One container, one volume</h3>
+        <p>Multi-architecture image on <code>linux/amd64</code> and <code>linux/arm64</code>. Mount <code>./data</code> and that is the entire state: notes, images, accounts, index.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="screens">
+  <div class="container">
+    <div class="section-head">
+      <h2>Screenshots</h2>
+      <p>Taken from a running instance with a demo account — the same build you can pull.</p>
+    </div>
+    <div class="shots">
+      <figure class="shot">
+        <img src="assets/main-dark.png" width="1440" height="900" alt="Dark theme: sidebar with Personal and Work folders, and a note with a task list and a SQL snippet" loading="lazy">
+        <figcaption>Dark theme, same note</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="assets/settings-light.png" width="1440" height="900" alt="Settings page: account and password, appearance with theme, language and accent colour, then data" loading="lazy">
+        <figcaption>Settings: account, appearance, users, data</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="assets/mobile-light.png" width="390" height="844" alt="Phone-sized layout: a hamburger button, a breadcrumb and the editor canvas" loading="lazy">
+        <figcaption>390 px wide, drawer closed</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+
+<section id="deploy" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>Deploy</h2>
+      <p>Docker with Compose, one port and one directory. No external database, no mail server, no TLS termination.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step__num">01</div>
+        <div>
+          <h3>Clone and start</h3>
+          <p>The image builds locally from source. <code>./data</code> is created on first start; mount it and that is the whole state.</p>
+          <div class="copy-wrap">
+            <button class="copy" type="button" data-copy>Copy</button>
+            <pre><code>git clone https://github.com/noelbennettz/flownotes.git
+cd flownotes
+mkdir -p data
+docker compose up -d --build</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">02</div>
+        <div>
+          <h3>Or run the published image</h3>
+          <p><code>ghcr.io/noelbennettz/flownotes:latest</code> is public and multi-architecture, so <code>docker pull</code> needs no login. The Compose file that comes with the repository keeps <code>./data</code> and the same port.</p>
+          <div class="copy-wrap">
+            <button class="copy" type="button" data-copy>Copy</button>
+            <pre><code>docker compose -f docker-compose.ghcr.yml up -d
+docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">03</div>
+        <div>
+          <h3>Finish the setup wizard</h3>
+          <p>Open <code>http://your-server:8000/</code>; with no accounts the service sends you to <code>/setup</code>. Create the administrator, and the instance becomes yours. Set <code>FLOWNOTES_SETUP_TOKEN</code> before the first start if the port may be reachable by others: the wizard then asks for it and refuses everything else.</p>
+        </div>
+      </div>
+    </div>
+    <p class="note">
+      <strong>Rootless Docker:</strong> the container user is 1000, which maps to a sub-uid and
+      cannot write a <code>./data</code> owned by you. Put <code>FLOWNOTES_UID=0</code> and
+      <code>FLOWNOTES_GID=0</code> in <code>.env</code> so the container writes files as your own
+      user; on a normal rootful install, leave the defaults.
+    </p>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="container">
+    <div class="section-head">
+      <h2>Limits worth knowing</h2>
+      <p>What Flow Notes deliberately does not do, before you move notes into it.</p>
+    </div>
+    <div class="split">
+      <div>
+        <ul class="checks">
+          <li><strong>One process, one throttle.</strong> Failed sign-ins are counted in memory: ten per address and account in five minutes. Restarting clears the count, and a multi-worker deployment counts each worker separately.</li>
+          <li><strong>Two tabs, one winner.</strong> There is no merge. If the same note is open twice, the last save wins.</li>
+          <li><strong>Administrators manage accounts, not notes.</strong> An administrator cannot open another account's notes; that is intentional, and the fix for a lost note is the filesystem or a backup.</li>
+          <li><strong>Images need a session.</strong> <code>/uploads</code> is not public; a note image is served to its owner. Files from the single-user era stay readable by any signed-in account.</li>
+        </ul>
+      </div>
+      <div>
+        <p class="note">
+          <strong>Plain HTTP is supported on purpose.</strong> The session cookie is
+          <code>HttpOnly</code> and <code>SameSite=Lax</code> but not <code>Secure</code>, so an internal
+          address such as <code>http://192.168.1.10:8000</code> can sign in. Put it behind a TLS proxy
+          before exposing it to the internet.
+        </p>
+        <p class="note">
+          <strong>Search is a convenience, not the source.</strong> The index ranks and highlights;
+          the files decide what exists. Run <code>POST /api/resync</code> (or delete
+          <code>index.db</code>) whenever you doubt it.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="specs" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>Technical details</h2>
+      <p>What runs, what it listens on, and what it stores.</p>
+    </div>
+    <dl class="specs">
+      <div><dt>Image</dt><dd class="mono">ghcr.io/noelbennettz/flownotes</dd></div>
+      <div><dt>Tags</dt><dd class="mono">latest, master, sha-&lt;commit&gt;</dd></div>
+      <div><dt>Platforms</dt><dd>linux/amd64, linux/arm64</dd></div>
+      <div><dt>Port</dt><dd>8000</dd></div>
+      <div><dt>State</dt><dd><code>./data</code> volume: notes, uploads, index.db, session secret</dd></div>
+      <div><dt>Stack</dt><dd>Python 3.11, FastAPI, SQLite FTS5, vanilla JS, Tiptap</dd></div>
+      <div><dt>Languages</dt><dd>7 — English, Arabic, Spanish, French, Russian, Simplified Chinese and Traditional Chinese</dd></div>
+      <div><dt>License</dt><dd>MIT</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <div class="section-head">
+      <h2>Questions</h2>
+      <p>The things worth knowing before moving a year of notes into it.</p>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>Where do the notes actually live?</summary>
+        <p>In <code>data/notes/&lt;account&gt;/</code>, one <code>.md</code> file per note, and folders for folders. <code>data/index.db</code> holds the accounts and the FTS5 index; it can be deleted and rebuilt from disk, so a backup of the Markdown is a backup of the notes.</p>
+      </details>
+      <details>
+        <summary>Can I edit files with vim or Obsidian and keep using the web UI?</summary>
+        <p>Yes. <code>GET /api/tree</code> and <code>GET /api/search</code> compare the disk with the index at most once every two seconds per account, so an external edit appears without a restart. A file written while the same note is open in the browser is the one case that can lose the browser's pending change.</p>
+      </details>
+      <details>
+        <summary>Does it really work with no internet access?</summary>
+        <p>The page, the stylesheet, the editor bundle and every icon come from the same origin, and the server sends a Content-Security-Policy of <code>default-src 'self'</code>. Nothing is fetched from a CDN, a font service or an icon host at any point.</p>
+      </details>
+      <details>
+        <summary>What if the administrator forgets the password?</summary>
+        <p>On the server: <code>python -m app.cli passwd admin</code>, or <code>docker compose exec -it flownotes python -m app.cli passwd admin</code>. It writes the database directly, so no restart is needed and existing sessions for that account stop working.</p>
+      </details>
+      <details>
+        <summary>How do I back up or move the instance?</summary>
+        <p>Copy <code>data/</code> — notes, uploads, <code>index.db</code> and <code>.session-secret</code> — and start the container on the new host with the same directory. Keeping the session secret keeps everyone signed in; dropping it only signs them out.</p>
+      </details>
+      <details>
+        <summary>Why MIT?</summary>
+        <p>It is a small personal tool: run it, fork it, change it, ship it. The only request is that the copyright notice travels with the copies.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p><strong>Flow Notes</strong> is a self-hosted Markdown note server, licensed MIT.</p>
+    <nav aria-label="Footer">
+      <a href="https://github.com/noelbennettz/flownotes">Source</a>
+      <a href="https://github.com/noelbennettz/flownotes/blob/master/README.md">Docs</a>
+      <a href="https://github.com/noelbennettz/flownotes/pkgs/container/flownotes">Container</a>
+      <a href="https://github.com/noelbennettz/flownotes/blob/master/LICENSE">License</a>
+      <a href="/">Index</a>
+    </nav>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Flow Notes",
+  "operatingSystem": "Linux (Docker)",
+  "applicationCategory": "ProductivityApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "license": "https://opensource.org/license/mit",
+  "codeRepository": "https://github.com/noelbennettz/flownotes",
+  "downloadUrl": "https://github.com/noelbennettz/flownotes/pkgs/container/flownotes"
+}
+</script>
+</body>
+</html>

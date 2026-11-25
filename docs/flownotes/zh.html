@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow Notes — 自架 Markdown 筆記，內建全文檢索</title>
+<meta name="description" content="Flow Notes 是自架的筆記伺服器：每篇筆記都是純 Markdown 檔，資料夾就是側邊欄，SQLite FTS5 只是可重建的索引，瀏覽器端完全不做外部請求。">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#191919" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="canonical" href="https://noelbennettz.github.io/flownotes/zh.html">
+<link rel="alternate" hreflang="en" href="index.html">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<script src="../theme.js"></script>
+<link rel="stylesheet" href="../m3.css">
+<link rel="stylesheet" href="style.css">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Flow Notes — 筆記留在自己的硬碟">
+<meta property="og:description" content="純 Markdown 檔、可重建的 FTS5 索引、離線也能用的編輯器。一個容器、一個資料夾、沒有 CDN。">
+<meta property="og:url" content="https://noelbennettz.github.io/flownotes/zh.html">
+<meta property="og:image" content="https://noelbennettz.github.io/flownotes/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">跳到內容</a>
+
+<svg class="visually-hidden" aria-hidden="true" focusable="false">
+  <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h4"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.4"/><path d="m16 16 4.2 4.2"/></symbol>
+  <symbol id="i-command" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M13 15h4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.2 2.7-5.5 6-5.5s6 2.3 6 5.5"/><path d="M16 5.5a3 3 0 0 1 0 5.8M17 14.8c2.4.5 4 2.4 4 5.2"/></symbol>
+  <symbol id="i-offline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M8.5 15.5a5 5 0 0 1 7 0M5 12a10 10 0 0 1 5-2.6M14 9.4A10 10 0 0 1 19 12"/><path d="M12 19h.01"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2M12 3.4c2.4 2.4 3.7 5.4 3.7 8.6S14.4 18.2 12 20.6c-2.4-2.4-3.7-5.4-3.7-8.6S9.6 5.8 12 3.4Z"/></symbol>
+  <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7v10l8 4 8-4V7z"/><path d="m4 7 8 4 8-4M12 21V11"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M13 15h4"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4m8-8 4 4-4 4M14 4l-4 16"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+</svg>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="./zh.html">
+      <img src="assets/icon.svg" alt="" width="26" height="26">
+      Flow Notes
+    </a>
+    <nav class="nav" aria-label="主選單">
+      <a class="hide-sm" href="#features">功能</a>
+      <a class="hide-sm" href="#screens">畫面</a>
+      <a class="hide-sm" href="#deploy">部署</a>
+      <a class="hide-sm" href="https://github.com/noelbennettz/flownotes">GitHub</a>
+      <button class="theme-toggle" type="button" aria-pressed="false">夜間</button>
+      <a class="lang" href="index.html" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero">
+  <div class="container">
+    <div>
+      <p class="eyebrow">自架 · Docker · MIT</p>
+      <h1>筆記，就放在<br><em>自己的硬碟。</em></h1>
+      <p class="lede">
+        Flow Notes 是自己跑的筆記伺服器。每篇筆記都是 <code>data/notes/&lt;帳號&gt;/</code>
+        底下的純 Markdown 檔，資料夾結構就是側邊欄，SQLite 只存帳號和一份隨時可以丟掉、重建的
+        索引。瀏覽器端不向網路抓任何東西——沒有 CDN、沒有線上字體、沒有外部圖示。
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#deploy">
+          <svg aria-hidden="true"><use href="#i-terminal"/></svg>
+          用 Compose 部署
+        </a>
+        <a class="btn" href="https://github.com/noelbennettz/flownotes">
+          <svg aria-hidden="true"><use href="#i-code"/></svg>
+          原始碼與文件
+        </a>
+      </div>
+      <ul class="pills">
+        <li>MIT</li>
+        <li>七種介面語言</li>
+        <li>SQLite FTS5</li>
+        <li>多使用者</li>
+        <li>映像約 170 MB</li>
+        <li>零外部請求</li>
+      </ul>
+    </div>
+    <div class="sheet">
+      <div class="sheet__bar" aria-hidden="true">
+        <span></span><span></span><span></span>
+        <div class="sheet__path">data/notes/admin/Work/2026/Project plan.md</div>
+      </div>
+      <img class="only-light" src="assets/main-light.png" width="1440" height="900" alt="Flow Notes 介面：左側是資料夾與選中的筆記，右側編輯區有標題、待辦清單與程式碼區塊">
+      <img class="only-dark" src="assets/main-dark.png" width="1440" height="900" alt="同一篇筆記的夜間模式">
+    </div>
+  </div>
+</section>
+
+<section id="features" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>它做什麼</h2>
+      <p>儲存、檢索、編輯與帳號，以及每一項刻意不做的事。</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-file"/></svg></div>
+        <h3>檔案優先</h3>
+        <p>一篇筆記一個 Markdown 檔，一個資料夾一層側邊欄，沒有隱藏格式。用 SSH 改檔案也行，目錄樹與索引兩秒內跟上。</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-search"/></svg></div>
+        <h3>可以重建的搜尋</h3>
+        <p>SQLite FTS5，用 <code>snippet()</code> 產生片段並以 <code>&lt;mark&gt;</code> 標記命中；FTS 落空時退到子字串比對，中文詞也找得到。索引刪掉重掃就好。</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-command"/></svg></div>
+        <h3>說 Markdown 的編輯器</h3>
+        <p>Tiptap 加上 Markdown 往返。行首打 <code>/</code> 開 17 個指令；<code># </code>、<code>- </code>、<code>1. </code>、<code>&gt; </code>、<code>---</code> 與圍籬邊打邊轉換；貼上截圖會自動上傳並插入。</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-users"/></svg></div>
+        <h3>各自獨立的帳號空間</h3>
+        <p>每個帳號擁有 <code>notes/&lt;名稱&gt;/</code> 與 <code>uploads/&lt;名稱&gt;/</code>，索引查詢一律按 owner 過濾。管理員可新增、停用、刪除帳號；刪除是把檔案搬進 <code>data/trash/</code>。</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-offline"/></svg></div>
+        <h3>從結構上就離線</h3>
+        <p>編輯器 bundle 由 esbuild 在本機打包，所有圖示都是內嵌 SVG，伺服器送出 <code>default-src 'self'</code>。連不上外網的瀏覽器仍然拿到完整介面。</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-globe"/></svg></div>
+        <h3>七種語言，含 RTL</h3>
+        <p>英、阿拉伯、西、法、俄與繁簡中文，阿拉伯語是完整鏡像版面。淺色、深色或跟隨系統，另有六種強調色。</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-save"/></svg></div>
+        <h3>關掉分頁也留得住的自動存檔</h3>
+        <p>停筆 600 毫秒就存；頁面被隱藏時用 <code>keepalive</code> 補送未送的變更。任何一篇也能以 Markdown 的 ZIP 帶走。</p>
+      </article>
+      <article class="card">
+        <div class="icon"><svg aria-hidden="true"><use href="#i-box"/></svg></div>
+        <h3>一個容器、一個目錄</h3>
+        <p>multi-arch 映像支援 <code>linux/amd64</code> 與 <code>linux/arm64</code>。掛上 <code>./data</code>，整個狀態就都在那裡：筆記、圖片、帳號、索引。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="screens">
+  <div class="container">
+    <div class="section-head">
+      <h2>畫面</h2>
+      <p>都是從實際跑起來的實例、用示範帳號截的——跟你 pull 到的同一版。</p>
+    </div>
+    <div class="shots">
+      <figure class="shot">
+        <img src="assets/main-dark.png" width="1440" height="900" alt="夜間模式：側邊欄的 Personal 與 Work 資料夾，以及含待辦清單與 SQL 片段的筆記" loading="lazy">
+        <figcaption>夜間模式，同一篇筆記</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="assets/settings-light.png" width="1440" height="900" alt="設定頁：帳號與密碼、外觀（主題、語言、強調色）、資料" loading="lazy">
+        <figcaption>設定：帳號、外觀、使用者、資料</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="assets/mobile-light.png" width="390" height="844" alt="手機寬度：漢堡按鈕、麵包屑與編輯畫布" loading="lazy">
+        <figcaption>390 px 寬，抽屜收合</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+
+<section id="deploy" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>部署</h2>
+      <p>Docker 加 Compose，一個埠、一個目錄。不用外部資料庫、不用郵件伺服器、也不用自己處理憑證。</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step__num">01</div>
+        <div>
+          <h3>抓下來直接跑</h3>
+          <p>映像從原始碼在本機建置。<code>./data</code> 第一次啟動時建立；把它掛進去，整個狀態就在裡面。</p>
+          <div class="copy-wrap">
+            <button class="copy" type="button" data-copy>複製</button>
+            <pre><code>git clone https://github.com/noelbennettz/flownotes.git
+cd flownotes
+mkdir -p data
+docker compose up -d --build</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">02</div>
+        <div>
+          <h3>或直接用已發布的映像</h3>
+          <p><code>ghcr.io/noelbennettz/flownotes:latest</code> 是公開的 multi-arch 映像，<code>docker pull</code> 不需要登入。專案附的 Compose 檔一樣會掛上 <code>./data</code>、開同一個埠。</p>
+          <div class="copy-wrap">
+            <button class="copy" type="button" data-copy>複製</button>
+            <pre><code>docker compose -f docker-compose.ghcr.yml up -d
+docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">03</div>
+        <div>
+          <h3>走完首次設定</h3>
+          <p>打開 <code>http://你的伺服器:8000/</code>；還沒有帳號時會跳到 <code>/setup</code>。建立管理員之後就是你的了。如果這個埠可能被別人先連上，第一次啟動前設 <code>FLOWNOTES_SETUP_TOKEN</code>，精靈會要求它，其餘請求一律拒絕。</p>
+        </div>
+      </div>
+    </div>
+    <p class="note">
+      <strong>Rootless Docker：</strong>容器使用者是 1000，會映射成 sub-uid，寫不進你自己的
+      <code>./data</code>。在 <code>.env</code> 設 <code>FLOWNOTES_UID=0</code> 與
+      <code>FLOWNOTES_GID=0</code>，容器就會以你的身分寫檔；一般 rootful 安裝維持預設即可。
+    </p>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="container">
+    <div class="section-head">
+      <h2>該先知道的限制</h2>
+      <p>Flow Notes 刻意不做的事，搬筆記進來之前先看一眼。</p>
+    </div>
+    <div class="split">
+      <div>
+        <ul class="checks">
+          <li><strong>單一 process、單一節流。</strong>登入失敗記在記憶體裡：同一來源 IP 與帳號五分鐘十次。重啟就歸零，多 worker 部署時各自計算。</li>
+          <li><strong>兩個分頁，後寫的贏。</strong>沒有合併機制。同一篇在兩個分頁開著，最後儲存的那次覆蓋前一次。</li>
+          <li><strong>管理員管帳號，不看筆記。</strong>管理員打不開別人的筆記，這是刻意的；筆記丟了要靠檔案系統或備份。</li>
+          <li><strong>圖片需要登入。</strong><code>/uploads</code> 不是公開的，筆記圖片只給擁有者。單人時代留下的檔案，任何已登入帳號都讀得到。</li>
+        </ul>
+      </div>
+      <div>
+        <p class="note">
+          <strong>刻意支援純 HTTP。</strong>session cookie 是 <code>HttpOnly</code> 加
+          <code>SameSite=Lax</code>，但沒有 <code>Secure</code>，所以內網位址像
+          <code>http://192.168.1.10:8000</code> 能登入。要對外之前請放到 TLS 代理後面。
+        </p>
+        <p class="note">
+          <strong>搜尋是方便，不是真相。</strong>索引負責排序與標記，檔案決定什麼存在。覺得不對就
+          <code>POST /api/resync</code>，或直接刪掉 <code>index.db</code>。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="specs" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>技術細節</h2>
+      <p>跑什麼、聽哪個埠、存了哪些東西。</p>
+    </div>
+    <dl class="specs">
+      <div><dt>映像</dt><dd class="mono">ghcr.io/noelbennettz/flownotes</dd></div>
+      <div><dt>標籤</dt><dd class="mono">latest, master, sha-&lt;commit&gt;</dd></div>
+      <div><dt>平台</dt><dd>linux/amd64, linux/arm64</dd></div>
+      <div><dt>埠</dt><dd>8000</dd></div>
+      <div><dt>狀態</dt><dd><code>./data</code> 磁碟區：筆記、上傳、index.db、session 密鑰</dd></div>
+      <div><dt>技術</dt><dd>Python 3.11、FastAPI、SQLite FTS5、原生 JS、Tiptap</dd></div>
+      <div><dt>語言</dt><dd>7 種——英、阿拉伯、西、法、俄、簡中與繁中</dd></div>
+      <div><dt>授權</dt><dd>MIT</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <div class="section-head">
+      <h2>常見問題</h2>
+      <p>把一整年的筆記搬進來之前，值得先知道的事。</p>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>筆記到底放在哪裡？</summary>
+        <p><code>data/notes/&lt;帳號&gt;/</code>，一篇筆記一個 <code>.md</code>，資料夾就是資料夾。<code>data/index.db</code> 存帳號與 FTS5 索引，可以刪掉並從磁碟重建——備份 Markdown 就等於備份筆記。</p>
+      </details>
+      <details>
+        <summary>可以用 vim 或 Obsidian 改檔案，再回來用網頁介面嗎？</summary>
+        <p>可以。<code>GET /api/tree</code> 與 <code>GET /api/search</code> 每帳號最多每兩秒比對一次磁碟與索引，外部修改不用重啟就會出現。唯一會出事的情況是：同一篇正在瀏覽器裡編輯時，外部改寫了它。</p>
+      </details>
+      <details>
+        <summary>真的完全不需要連外網嗎？</summary>
+        <p>頁面、樣式、編輯器 bundle 與所有圖示都同源，伺服器也送出 <code>default-src 'self'</code> 的 Content-Security-Policy。任何時刻都不會向 CDN、字體服務或圖示站台抓東西。</p>
+      </details>
+      <details>
+        <summary>管理員忘記密碼怎麼辦？</summary>
+        <p>在伺服器上跑 <code>python -m app.cli passwd admin</code>，或 <code>docker compose exec -it flownotes python -m app.cli passwd admin</code>。它直接寫資料庫，不用重啟，該帳號既有的 session 會立刻失效。</p>
+      </details>
+      <details>
+        <summary>怎麼備份、怎麼搬家？</summary>
+        <p>複製 <code>data/</code>——筆記、上傳、<code>index.db</code> 與 <code>.session-secret</code>——在新主機用同一個目錄起容器即可。帶著 session 密鑰，大家不用重新登入；不帶只是被登出。</p>
+      </details>
+      <details>
+        <summary>為什麼是 MIT？</summary>
+        <p>它就是個小型自用工具：自己跑、fork、改、再散布都行，唯一的要求是副本要帶著版权聲明。</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p><strong>Flow Notes</strong> 是自架的 Markdown 筆記伺服器，MIT 授權。</p>
+    <nav aria-label="頁尾">
+      <a href="https://github.com/noelbennettz/flownotes">原始碼</a>
+      <a href="https://github.com/noelbennettz/flownotes/blob/master/README.md">文件</a>
+      <a href="https://github.com/noelbennettz/flownotes/pkgs/container/flownotes">容器映像</a>
+      <a href="https://github.com/noelbennettz/flownotes/blob/master/LICENSE">授權</a>
+      <a href="/zh.html">索引</a>
+    </nav>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Flow Notes",
+  "operatingSystem": "Linux (Docker)",
+  "applicationCategory": "ProductivityApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "license": "https://opensource.org/license/mit",
+  "codeRepository": "https://github.com/noelbennettz/flownotes",
+  "downloadUrl": "https://github.com/noelbennettz/flownotes/pkgs/container/flownotes"
+}
+</script>
+</body>
+</html>
