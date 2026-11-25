@@ -302,7 +302,15 @@ docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
       </details>
       <details>
         <summary>為什麼是 MIT？</summary>
-        <p>它就是個小型自用工具：自己跑、fork、改、再散布都行，唯一的要求是副本要帶著版权聲明。</p>
+        <p>它就是個小型自用工具：自己跑、fork、改、再散布都行，唯一的要求是副本要帶著版權聲明。</p>
+      </details>
+      <details>
+        <summary>它有 HTTPS 嗎？</summary>
+        <p>沒有。App 以純 HTTP 監聽（uvicorn 8000 埠），映像裡沒有憑證、沒有 ACME 用戶端、也沒有 HSTS 標頭。這是刻意的：session cookie 是 <code>HttpOnly</code> 加 <code>SameSite=Lax</code>，但沒有 <code>Secure</code>，內網位址像 <code>http://192.168.1.10:8000</code> 才登得進去。請讓這個埠留在內網，或在前端終結 TLS。</p>
+      </details>
+      <details>
+        <summary>要怎麼在前面放反向代理？</summary>
+        <p>Caddy 兩行就好：<code>notes.example.com { reverse_proxy 127.0.0.1:8000 }</code>。nginx 則是 <code>proxy_pass http://127.0.0.1:8000;</code> 加 <code>proxy_set_header Host $host;</code>，並把 <code>client_max_body_size</code> 提到 21m 以上，否則 20 MB 的圖片上傳會被擋。不需要 WebSocket upgrade；把發布埠綁在 <code>127.0.0.1</code> 就能讓純 HTTP 不出現在網路上。兩種設定都寫在 DOCS.md。</p>
       </details>
     </div>
   </div>

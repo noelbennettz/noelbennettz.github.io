@@ -105,31 +105,6 @@
   </a>
 </section>
 
-
-<section class="faq container" aria-labelledby="faq-title">
-  <h2 id="faq-title">常見問題</h2>
-  <details>
-    <summary>自架的服務有 HTTPS 嗎？</summary>
-    <p>
-      沒有。Flow Notes、iMail 與 AmneziaWG 面板都以純 HTTP 監聽——Flow Notes 是 8000 埠，iMail
-      要等它自己的 ACME 設定完成才有 443，AmneziaWG 用你指定的埠。它們的 session cookie 是
-      <code>HttpOnly</code> 加 <code>SameSite=Lax</code>，但沒有 <code>Secure</code>，這正是內網
-      位址像 <code>http://192.168.1.10:8000</code> 能登入的原因。請讓這些埠留在內網，對外之前
-      在後面終結 TLS。
-    </p>
-  </details>
-  <details>
-    <summary>要怎麼在前面放反向代理？</summary>
-    <p>
-      Caddy 兩行就好：<code>notes.example.com { reverse_proxy 127.0.0.1:8000 }</code>。nginx 則是
-      <code>proxy_pass http://127.0.0.1:8000;</code> 加
-      <code>proxy_set_header Host $host;</code>，並把 <code>client_max_body_size</code> 提到 21m
-      以上，否則 20 MB 的圖片上傳會被擋。不需要 WebSocket upgrade，也不需要改寫規則；把容器綁在
-      <code>127.0.0.1:8000</code> 就能讓純 HTTP 的埠不出現在網路上。
-    </p>
-  </details>
-</section>
-
 </main>
 
 <footer class="site-footer">

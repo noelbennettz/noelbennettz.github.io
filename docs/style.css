@@ -176,54 +176,6 @@ h1 em {
   .intro { grid-template-columns: 1fr; gap: 20px; padding-top: 44px; }
 }
 
-/* FAQ: the same narrow measure as the lede, rules instead of boxes. */
-
-.faq {
-  max-width: 780px;
-  margin: 0 auto 64px;
-  padding: 0 0 8px;
-}
-.faq h2 {
-  margin: 0 0 4px;
-  font-size: var(--md-sys-type-headline-size);
-  font-weight: 500;
-  letter-spacing: -0.03em;
-}
-.faq details {
-  border-top: 1px solid var(--md-sys-color-outline-variant);
-}
-.faq details:last-of-type {
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
-}
-.faq summary {
-  padding: 16px 0;
-  font-family: var(--mono);
-  font-size: var(--md-sys-type-label-lg-size);
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  list-style: none;
-}
-.faq summary::-webkit-details-marker { display: none; }
-.faq summary::before {
-  content: "+";
-  margin-inline-end: 10px;
-  color: var(--md-sys-color-on-surface-variant);
-}
-.faq details[open] summary::before { content: "\2212"; }
-.faq details p {
-  margin: 0 0 18px;
-  padding-inline-start: 22px;
-  color: var(--md-sys-color-on-surface-variant);
-  font-size: 0.94rem;
-}
-.faq code {
-  padding: 1px 5px;
-  border: 1px solid var(--md-sys-color-outline-variant);
-  border-radius: var(--md-sys-shape-xs);
-  background: var(--md-sys-color-surface-container-low);
-  font-size: 0.85em;
-}
-
 /* Index: one grouped M3 list. Rows are list items, not cards — the group is
    the surface, and the hover state is the row's own colour. */
 

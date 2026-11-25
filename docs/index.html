@@ -106,32 +106,6 @@
   </a>
 </section>
 
-
-<section class="faq container" aria-labelledby="faq-title">
-  <h2 id="faq-title">Questions</h2>
-  <details>
-    <summary>Do the self-hosted services speak HTTPS?</summary>
-    <p>
-      No. Flow Notes, iMail and the AmneziaWG panel listen on plain HTTP — Flow Notes on port 8000,
-      iMail on 80 and 443 only after its own ACME setup, AmneziaWG on its chosen port. Their session
-      cookies are <code>HttpOnly</code> and <code>SameSite=Lax</code> but not <code>Secure</code>,
-      which is what lets a LAN address such as <code>http://192.168.1.10:8000</code> sign in. Keep
-      those ports on the LAN and terminate TLS in front before exposing anything to the internet.
-    </p>
-  </details>
-  <details>
-    <summary>How do I put a reverse proxy in front?</summary>
-    <p>
-      With Caddy it is two lines: <code>notes.example.com { reverse_proxy 127.0.0.1:8000 }</code>.
-      With nginx, <code>proxy_pass http://127.0.0.1:8000;</code> plus
-      <code>proxy_set_header Host $host;</code>, and raise <code>client_max_body_size</code> to at
-      least 21m so 20 MB image uploads are not rejected. No WebSocket upgrade and no rewrite rules
-      are needed, and binding the container to <code>127.0.0.1:8000</code> keeps the plain port off
-      the network.
-    </p>
-  </details>
-</section>
-
 </main>
 
 <footer class="site-footer">

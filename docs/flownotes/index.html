@@ -310,6 +310,14 @@ docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
         <summary>Why MIT?</summary>
         <p>It is a small personal tool: run it, fork it, change it, ship it. The only request is that the copyright notice travels with the copies.</p>
       </details>
+      <details>
+        <summary>Does it serve HTTPS?</summary>
+        <p>No. The app listens on plain HTTP — uvicorn on port 8000 — and the image carries no certificate, no ACME client and no HSTS header. That is deliberate: the session cookie is <code>HttpOnly</code> and <code>SameSite=Lax</code> but not <code>Secure</code>, so a LAN address such as <code>http://192.168.1.10:8000</code> can sign in. Keep the port on the LAN, or terminate TLS in front of it.</p>
+      </details>
+      <details>
+        <summary>How do I put a reverse proxy in front?</summary>
+        <p>With Caddy it is two lines: <code>notes.example.com { reverse_proxy 127.0.0.1:8000 }</code>. With nginx, <code>proxy_pass http://127.0.0.1:8000;</code> plus <code>proxy_set_header Host $host;</code>, and raise <code>client_max_body_size</code> to at least 21m so 20 MB image uploads are not rejected. No WebSocket upgrade is needed, and binding the published port to <code>127.0.0.1</code> keeps plain HTTP off the network. DOCS.md has both configurations.</p>
+      </details>
     </div>
   </div>
 </section>
