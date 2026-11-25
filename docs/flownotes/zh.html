@@ -66,7 +66,7 @@
       <h1>筆記，就放在<br><em>自己的硬碟。</em></h1>
       <p class="lede">
         Flow Notes 是自己跑的筆記伺服器。每篇筆記都是 <code>data/notes/&lt;帳號&gt;/</code>
-        底下的純 Markdown 檔，資料夾結構就是側邊欄，SQLite 只存帳號和一份隨時可以丟掉、重建的
+        底下的純 Markdown 檔，資料夾結構就是側邊欄，SQLite 只存帳號和一份從檔案重建的
         索引。瀏覽器端不向網路抓任何東西——沒有 CDN、沒有線上字體、沒有外部圖示。
       </p>
       <div class="actions">
@@ -235,7 +235,7 @@ docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
           <li><strong>單一 process、單一節流。</strong>登入失敗記在記憶體裡：同一來源 IP 與帳號五分鐘十次。重啟就歸零，多 worker 部署時各自計算。</li>
           <li><strong>兩個分頁，後寫的贏。</strong>沒有合併機制。同一篇在兩個分頁開著，最後儲存的那次覆蓋前一次。</li>
           <li><strong>管理員管帳號，不看筆記。</strong>管理員打不開別人的筆記，這是刻意的；筆記丟了要靠檔案系統或備份。</li>
-          <li><strong>圖片需要登入。</strong><code>/uploads</code> 不是公開的，筆記圖片只給擁有者。單人時代留下的檔案，任何已登入帳號都讀得到。</li>
+          <li><strong>圖片需要登入。</strong><code>/uploads</code> 不是公開的，筆記圖片只給擁有者或管理員。單人時代留下的檔案，任何已登入帳號都讀得到。</li>
         </ul>
       </div>
       <div>
@@ -245,8 +245,8 @@ docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
           <code>http://192.168.1.10:8000</code> 能登入。要對外之前請放到 TLS 代理後面。
         </p>
         <p class="note">
-          <strong>搜尋是方便，不是真相。</strong>索引負責排序與標記，檔案決定什麼存在。覺得不對就
-          <code>POST /api/resync</code>，或直接刪掉 <code>index.db</code>。
+          <strong>搜尋是方便，不是真相。</strong>索引負責排序與標記，檔案決定什麼存在，懷疑時跑
+          <code>POST /api/resync</code> 重新比對。<code>index.db</code> 也存著帳號，刪之前先備份。
         </p>
       </div>
     </div>
@@ -282,7 +282,7 @@ docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
     <div class="faq">
       <details>
         <summary>筆記到底放在哪裡？</summary>
-        <p><code>data/notes/&lt;帳號&gt;/</code>，一篇筆記一個 <code>.md</code>，資料夾就是資料夾。<code>data/index.db</code> 存帳號與 FTS5 索引，可以刪掉並從磁碟重建——備份 Markdown 就等於備份筆記。</p>
+        <p><code>data/notes/&lt;帳號&gt;/</code>，一篇筆記一個 <code>.md</code>，資料夾就是資料夾。<code>data/index.db</code> 存帳號與 FTS5 索引；搜尋表可以從檔案重建，帳號資料不行，所以刪之前先複製它。真正值得備份的是 Markdown。</p>
       </details>
       <details>
         <summary>可以用 vim 或 Obsidian 改檔案，再回來用網頁介面嗎？</summary>

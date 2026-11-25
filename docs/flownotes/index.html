@@ -68,7 +68,7 @@
         Flow Notes is a note server you run yourself. Every note is a plain
         Markdown file under <code>data/notes/&lt;account&gt;/</code>, the folders
         on disk are the sidebar, and SQLite holds only the accounts and a search
-        index you can throw away and rebuild. The browser client fetches nothing
+        index that is rebuilt from those files. The browser client fetches nothing
         from the network — no CDN, no web fonts, no remote icons.
       </p>
       <div class="actions">
@@ -239,7 +239,7 @@ docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
           <li><strong>One process, one throttle.</strong> Failed sign-ins are counted in memory: ten per address and account in five minutes. Restarting clears the count, and a multi-worker deployment counts each worker separately.</li>
           <li><strong>Two tabs, one winner.</strong> There is no merge. If the same note is open twice, the last save wins.</li>
           <li><strong>Administrators manage accounts, not notes.</strong> An administrator cannot open another account's notes; that is intentional, and the fix for a lost note is the filesystem or a backup.</li>
-          <li><strong>Images need a session.</strong> <code>/uploads</code> is not public; a note image is served to its owner. Files from the single-user era stay readable by any signed-in account.</li>
+          <li><strong>Images need a session.</strong> <code>/uploads</code> is not public; a note image is served to its owner or an administrator. Files from the single-user era stay readable by any signed-in account.</li>
         </ul>
       </div>
       <div>
@@ -251,8 +251,8 @@ docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
         </p>
         <p class="note">
           <strong>Search is a convenience, not the source.</strong> The index ranks and highlights;
-          the files decide what exists. Run <code>POST /api/resync</code> (or delete
-          <code>index.db</code>) whenever you doubt it.
+          the files decide what exists, and <code>POST /api/resync</code> re-compares them.
+          <code>index.db</code> also holds the accounts, so back it up before deleting it.
         </p>
       </div>
     </div>
@@ -288,7 +288,7 @@ docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
     <div class="faq">
       <details>
         <summary>Where do the notes actually live?</summary>
-        <p>In <code>data/notes/&lt;account&gt;/</code>, one <code>.md</code> file per note, and folders for folders. <code>data/index.db</code> holds the accounts and the FTS5 index; it can be deleted and rebuilt from disk, so a backup of the Markdown is a backup of the notes.</p>
+        <p>In <code>data/notes/&lt;account&gt;/</code>, one <code>.md</code> file per note, and folders for folders. <code>data/index.db</code> holds the accounts and the FTS5 index; the search tables are rebuilt from the files, while the account rows are not, so copy the database before deleting it. The Markdown is the part worth backing up.</p>
       </details>
       <details>
         <summary>Can I edit files with vim or Obsidian and keep using the web UI?</summary>

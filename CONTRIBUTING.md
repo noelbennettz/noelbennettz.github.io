@@ -1,8 +1,8 @@
 # Contributing to the site
 
 This repository is the only place the pages live. The project repositories
-(`Hy2droid`, `amneziawg-ui`, `imail`, `flownotes`) no longer have a `docs/` directory or a
-Pages workflow; their former URLs are served from this repository:
+(`Hy2droid`, `amneziawg-ui`, `imail`, `flownotes`) no longer serve Pages sites of their
+own; their former URLs are served from this repository:
 
 - `/Hy2droid/`
 - `/amneziawg-ui/`

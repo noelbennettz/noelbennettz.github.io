@@ -11,9 +11,8 @@ projects and their sites:
 Every page is here: the index at `docs/`, and the four project sites under
 `docs/Hy2droid/`, `docs/amneziawg-ui/`, `docs/imail/` and `docs/flownotes/`, each served at the
 `https://noelbennettz.github.io/<project>/` path above. The project
-repositories no longer carry a `docs/` directory of their own — this repository
-is the only place the pages live, so a change to a project page is a change
-here.
+repositories no longer serve Pages sites of their own — this repository is the
+only place the pages live, so a change to a project page is a change here.
 
 The site is plain HTML/CSS — English and Traditional Chinese, each page linking
 to the other — with no build step, deployed to GitHub Pages by
