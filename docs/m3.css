@@ -1,6 +1,6 @@
 /* m3.css — the shared Material 3 contract for every page on this domain.
 
-   One system, four looks. The tokens below name the roles — colour, shape,
+   One system, five looks. The tokens below name the roles — colour, shape,
    motion, type — and each page supplies its own seed colour, its own fonts and
    one signature element.
 
@@ -88,7 +88,7 @@
     }
   }
 
-  /* Focus was missing on all four pages. The ring is the primary role, so it
+  /* Focus was missing on every page. The ring is the primary role, so it
      changes with the seed instead of being a fixed blue. */
   :where(a[href], button, summary, [tabindex]):focus-visible {
     outline: 3px solid var(--md-sys-color-primary);

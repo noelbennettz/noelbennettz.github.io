@@ -1,12 +1,13 @@
 # Contributing to the site
 
 This repository is the only place the pages live. The project repositories
-(`Hy2droid`, `amneziawg-ui`, `imail`) no longer have a `docs/` directory or a
+(`Hy2droid`, `amneziawg-ui`, `imail`, `flownotes`) no longer have a `docs/` directory or a
 Pages workflow; their former URLs are served from this repository:
 
 - `/Hy2droid/`
 - `/amneziawg-ui/`
 - `/imail/`
+- `/flownotes/`
 
 Do not copy a project site back into its own repository. A page change is a pull
 request here.
@@ -23,7 +24,7 @@ shfmt -i 2 -d scripts/*.sh && shellcheck scripts/*.sh
 
 ## Design system
 
-All four sites share `docs/m3.css`: Material 3 roles for colour, shape, motion
+All five sites share `docs/m3.css`: Material 3 roles for colour, shape, motion
 and type, plus the top-bar controls (`.theme-toggle`, `.nav .lang`), the button
 components and `.visually-hidden`. Each page links it before its own
 `style.css` and seeds the colour roles there, once for light and once for dark.
@@ -37,11 +38,11 @@ durations and easings, type sizes, and the colour roles `primary`,
 (plus `tertiary` where a page uses it). Add a role only together with the
 component that consumes it — an unused token is dead code like any other.
 
-When changing a page's look, keep the rule of one system and four looks: pick
+When changing a page's look, keep the rule of one system and five looks: pick
 shape steps from the shared scale instead of writing a new radius, use the
 8% hover / 12% pressed state convention, and keep at most one element that is
 unmistakably that page's own (iMail's postage stamp and offset shadows,
-Hy2droid's hairline readouts, the AmneziaWG browser frame). Then run
+Hy2droid's hairline readouts, the AmneziaWG browser frame, Flow Notes’ editor sheet). Then run
 `check-contrast.py`, which reads the seeds straight out of each `style.css` and
 fails on a pair below 4.5:1 for text or 3:1 for a control edge.
 
@@ -57,8 +58,8 @@ other.
 `pages.yml` deploys a copy of `docs/` with CSS/JS references stamped with the
 commit SHA, so a stylesheet change cannot hide behind the GitHub Pages cache.
 `checks.yml` runs the link and sitemap checks on every pull request; the Pages
-state job asserts that the three project repositories still have Pages disabled
+state job asserts that the four project repositories still have Pages disabled
 (otherwise they would shadow the central copies).
 
-The 404 page (`docs/404.html`) lists the three project sites for old links that
+The 404 page (`docs/404.html`) lists the four project sites for old links that
 no longer resolve.

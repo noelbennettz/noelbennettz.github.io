@@ -22,6 +22,7 @@ SITES = [
     ("Hy2droid", "Hy2droid"),
     ("amneziawg-ui", "amneziawg-ui"),
     ("imail", "imail"),
+    ("flownotes", "flownotes"),
 ]
 
 # Pairs that carry text, and the surfaces they can land on. A role a page does

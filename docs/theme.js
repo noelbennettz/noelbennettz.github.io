@@ -2,7 +2,7 @@
 
    Loaded synchronously in <head> before the stylesheet so the first paint
    already has data-theme; the same localStorage key is shared by the index and
-   the three project sites, so switching on one page switches all of them. */
+   the four project sites, so switching on one page switches all of them. */
 (function () {
   var root = document.documentElement;
   var KEY = "theme";
