@@ -200,7 +200,7 @@ ls -l /dev/net/tun</code></pre>
         </div>
       </div>
       <div class="step">
-        <h3>存成 compose.yaml</h3>
+        <h3>存成 docker-compose.yml</h3>
         <p>把上一步的結果填進 <code>WEB_UI_PASSWORD</code>，其中的 <code>$</code> 一律寫成 <code>$$</code>（或者整行留空，直接用 <code>docker compose exec app cat /etc/amnezia/first-run-password</code> 讀產生的密碼）。最常要改的是位址、port 與 volume：把面板綁在 <code>127.0.0.1</code>，就只有本機的 TLS 代理連得到，其他介面一律關著。每個 key 的意義寫在 DOCS.md，repo 裡另有一份逐行註解的 <code>docker-compose.example.yml</code>。</p>
         <div class="copy-wrap">
           <button class="copy" type="button" data-copy>複製</button>

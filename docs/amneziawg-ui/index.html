@@ -204,7 +204,7 @@ ls -l /dev/net/tun</code></pre>
         </div>
       </div>
       <div class="step">
-        <h3>Save this as compose.yaml</h3>
+        <h3>Save this as docker-compose.yml</h3>
         <p>Put the hash from step 1 into <code>WEB_UI_PASSWORD</code>, writing every <code>$</code> of it as <code>$$</code> (or leave the line out and read the generated password with <code>docker compose exec app cat /etc/amnezia/first-run-password</code>). The addresses, ports and volume are the parameters you are most likely to change — binding the panel to <code>127.0.0.1</code> keeps it reachable only from the host, which is what a local TLS proxy needs. Every key is explained in DOCS.md, and the repository ships the same file fully commented as <code>docker-compose.example.yml</code>.</p>
         <div class="copy-wrap">
           <button class="copy" type="button" data-copy>Copy</button>
