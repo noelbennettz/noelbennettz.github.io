@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="style.css">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Flow Notes — notes that stay on your disk">
-<meta property="og:description" content="Plain Markdown files, a rebuildable FTS5 index and an offline-first editor. One container, one volume, no CDN.">
+<meta property="og:description" content="Plain Markdown files, a rebuildable FTS5 index and an editor that makes no external requests. One container, one volume, no CDN.">
 <meta property="og:url" content="https://noelbennettz.github.io/flownotes/">
 <meta property="og:image" content="https://noelbennettz.github.io/flownotes/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -131,8 +131,8 @@
       </article>
       <article class="card">
         <div class="icon"><svg aria-hidden="true"><use href="#i-offline"/></svg></div>
-        <h3>Offline by construction</h3>
-        <p>The editor bundle is built locally with esbuild, every icon is an inline SVG, and the server sends <code>default-src 'self'</code>. A browser that cannot reach the internet still gets the whole interface.</p>
+        <h3>No external requests</h3>
+        <p>Everything the browser needs comes from your server: the editor bundle is built locally with esbuild, every icon is an inline SVG, and the Content-Security-Policy only allows this origin. A browser that can reach your LAN but not the internet still gets the whole interface.</p>
       </article>
       <article class="card">
         <div class="icon"><svg aria-hidden="true"><use href="#i-globe"/></svg></div>
@@ -165,8 +165,8 @@
         <figcaption>Dark theme, same note</figcaption>
       </figure>
       <figure class="shot">
-        <img src="assets/settings-light.png" width="1440" height="900" alt="Settings page: account and password, appearance with theme, language and accent colour, then data" loading="lazy">
-        <figcaption>Settings: account, appearance, users, data</figcaption>
+        <img src="assets/settings-light.png" width="1440" height="900" alt="Settings page: account and password, appearance with theme, language and accent colour" loading="lazy">
+        <figcaption>Settings: account, appearance, accent colour</figcaption>
       </figure>
       <figure class="shot">
         <img src="assets/mobile-light.png" width="390" height="844" alt="Phone-sized layout: a hamburger button, a breadcrumb and the editor canvas" loading="lazy">
@@ -237,7 +237,7 @@ docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
       <div>
         <ul class="checks">
           <li><strong>One process, one throttle.</strong> Failed sign-ins are counted in memory: ten per address and account in five minutes. Restarting clears the count, and a multi-worker deployment counts each worker separately.</li>
-          <li><strong>Two tabs, one winner.</strong> There is no merge. If the same note is open twice, the last save wins.</li>
+          <li><strong>No simultaneous editing.</strong> Flow Notes is not a collaborative editor: there is no live sync, presence or cursor sharing. Saves are versioned; if two devices write the same note, edits in different places are merged, and edits to the same lines keep one text and store the other as a <code>(conflict …)</code> copy. Treat that as a safety net, not as support for editing one note from several devices at once.</li>
           <li><strong>Administrators manage accounts, not notes.</strong> An administrator cannot open another account's notes; that is intentional, and the fix for a lost note is the filesystem or a backup.</li>
           <li><strong>Images need a session.</strong> <code>/uploads</code> is not public; a note image is served to its owner or an administrator. Files from the single-user era stay readable by any signed-in account.</li>
         </ul>
@@ -271,7 +271,7 @@ docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
       <div><dt>Tags</dt><dd class="mono">latest, master, sha-&lt;commit&gt;</dd></div>
       <div><dt>Platforms</dt><dd>linux/amd64, linux/arm64</dd></div>
       <div><dt>Port</dt><dd>8000</dd></div>
-      <div><dt>State</dt><dd><code>./data</code> volume: notes, uploads, index.db, session secret</dd></div>
+      <div><dt>State</dt><dd><code>./data</code> volume: notes, uploads, index.db, <code>.session-secret</code>, trash</dd></div>
       <div><dt>Stack</dt><dd>Python 3.11, FastAPI, SQLite FTS5, vanilla JS, Tiptap</dd></div>
       <div><dt>Languages</dt><dd>7 — English, Arabic, Spanish, French, Russian, Simplified Chinese and Traditional Chinese</dd></div>
       <div><dt>License</dt><dd>MIT</dd></div>
@@ -292,11 +292,11 @@ docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
       </details>
       <details>
         <summary>Can I edit files with vim or Obsidian and keep using the web UI?</summary>
-        <p>Yes. <code>GET /api/tree</code> and <code>GET /api/search</code> compare the disk with the index at most once every two seconds per account, so an external edit appears without a restart. A file written while the same note is open in the browser is the one case that can lose the browser's pending change.</p>
+        <p>Yes. <code>GET /api/tree</code> and <code>GET /api/search</code> compare the disk with the index at most once every two seconds per account, so an external edit appears without a restart. If the file changes while the same note is open in the browser, the browser's next save is merged with it when the edits are in different places; if they touch the same lines, the browser's text is kept as a separate <code>(conflict …)</code> note instead of overwriting the external one.</p>
       </details>
       <details>
         <summary>Does it really work with no internet access?</summary>
-        <p>The page, the stylesheet, the editor bundle and every icon come from the same origin, and the server sends a Content-Security-Policy of <code>default-src 'self'</code>. Nothing is fetched from a CDN, a font service or an icon host at any point.</p>
+        <p>The page, the stylesheet, the editor bundle and every icon come from the same origin, and the server sends a same-origin Content-Security-Policy (<code>default-src 'self'</code>, with the inline styles and scripts the app itself ships). Nothing is fetched from a CDN, a font service or an icon host at any point.</p>
       </details>
       <details>
         <summary>What if the administrator forgets the password?</summary>
@@ -317,6 +317,10 @@ docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
       <details>
         <summary>How do I put a reverse proxy in front?</summary>
         <p>With Caddy it is two lines: <code>notes.example.com { reverse_proxy 127.0.0.1:8000 }</code>. With nginx, <code>proxy_pass http://127.0.0.1:8000;</code> plus <code>proxy_set_header Host $host;</code>, and raise <code>client_max_body_size</code> to at least 21m so 20 MB image uploads are not rejected. No WebSocket upgrade is needed, and binding the published port to <code>127.0.0.1</code> keeps plain HTTP off the network. DOCS.md has both configurations.</p>
+      </details>
+      <details>
+        <summary>Can one account edit the same note from several devices at once?</summary>
+        <p>No. Flow Notes does not support simultaneous editing: there is no live sync, no presence and no cursor sharing, so two devices cannot reliably type in one note at the same time. Saves are versioned as a safety net — edits in different places are merged, and edits that touch the same lines keep one text and save the other as a <code>(conflict …)</code> note — but that is there to avoid losing work, not to make multi-device editing a supported workflow. Edit an active note on one device at a time.</p>
       </details>
     </div>
   </div>

@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="style.css">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Flow Notes — 筆記留在自己的硬碟">
-<meta property="og:description" content="純 Markdown 檔、可重建的 FTS5 索引、離線也能用的編輯器。一個容器、一個資料夾、沒有 CDN。">
+<meta property="og:description" content="純 Markdown 檔、可重建的 FTS5 索引、完全不連外網的編輯器。一個容器、一個資料夾、沒有 CDN。">
 <meta property="og:url" content="https://noelbennettz.github.io/flownotes/zh.html">
 <meta property="og:image" content="https://noelbennettz.github.io/flownotes/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -128,8 +128,8 @@
       </article>
       <article class="card">
         <div class="icon"><svg aria-hidden="true"><use href="#i-offline"/></svg></div>
-        <h3>從結構上就離線</h3>
-        <p>編輯器 bundle 由 esbuild 在本機打包，所有圖示都是內嵌 SVG，伺服器送出 <code>default-src 'self'</code>。連不上外網的瀏覽器仍然拿到完整介面。</p>
+        <h3>完全不連外網</h3>
+        <p>瀏覽器需要的東西都由你的伺服器提供：編輯器 bundle 由 esbuild 在本機打包、所有圖示都是內嵌 SVG、Content-Security-Policy 只允許同源。只能連內網、連不上外網的瀏覽器仍然拿到完整介面。</p>
       </article>
       <article class="card">
         <div class="icon"><svg aria-hidden="true"><use href="#i-globe"/></svg></div>
@@ -162,8 +162,8 @@
         <figcaption>夜間模式，同一篇筆記</figcaption>
       </figure>
       <figure class="shot">
-        <img src="assets/settings-light.png" width="1440" height="900" alt="設定頁：帳號與密碼、外觀（主題、語言、強調色）、資料" loading="lazy">
-        <figcaption>設定：帳號、外觀、使用者、資料</figcaption>
+        <img src="assets/settings-light.png" width="1440" height="900" alt="設定頁：帳號與密碼、外觀（主題、語言、強調色）" loading="lazy">
+        <figcaption>設定：帳號、外觀、強調色</figcaption>
       </figure>
       <figure class="shot">
         <img src="assets/mobile-light.png" width="390" height="844" alt="手機寬度：漢堡按鈕、麵包屑與編輯畫布" loading="lazy">
@@ -233,7 +233,7 @@ docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
       <div>
         <ul class="checks">
           <li><strong>單一 process、單一節流。</strong>登入失敗記在記憶體裡：同一來源 IP 與帳號五分鐘十次。重啟就歸零，多 worker 部署時各自計算。</li>
-          <li><strong>兩個分頁，後寫的贏。</strong>沒有合併機制。同一篇在兩個分頁開著，最後儲存的那次覆蓋前一次。</li>
+          <li><strong>不支援同時編輯。</strong>Flow Notes 不是協作編輯器：沒有即時同步、沒有線上狀態、也沒有游標共享。存檔有版本檢查；兩台裝置寫同一篇時，改在不同位置會合併，改到同一批行則保留一份、另一份另存為 <code>(conflict …)</code> 副本。那是避免遺失內容的保底機制，不代表支援多裝置同時編輯。</li>
           <li><strong>管理員管帳號，不看筆記。</strong>管理員打不開別人的筆記，這是刻意的；筆記丟了要靠檔案系統或備份。</li>
           <li><strong>圖片需要登入。</strong><code>/uploads</code> 不是公開的，筆記圖片只給擁有者或管理員。單人時代留下的檔案，任何已登入帳號都讀得到。</li>
         </ul>
@@ -265,7 +265,7 @@ docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
       <div><dt>標籤</dt><dd class="mono">latest, master, sha-&lt;commit&gt;</dd></div>
       <div><dt>平台</dt><dd>linux/amd64, linux/arm64</dd></div>
       <div><dt>埠</dt><dd>8000</dd></div>
-      <div><dt>狀態</dt><dd><code>./data</code> 磁碟區：筆記、上傳、index.db、session 密鑰</dd></div>
+      <div><dt>狀態</dt><dd><code>./data</code> 磁碟區：筆記、上傳、index.db、<code>.session-secret</code>、trash</dd></div>
       <div><dt>技術</dt><dd>Python 3.11、FastAPI、SQLite FTS5、原生 JS、Tiptap</dd></div>
       <div><dt>語言</dt><dd>7 種——英、阿拉伯、西、法、俄、簡中與繁中</dd></div>
       <div><dt>授權</dt><dd>MIT</dd></div>
@@ -286,11 +286,11 @@ docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
       </details>
       <details>
         <summary>可以用 vim 或 Obsidian 改檔案，再回來用網頁介面嗎？</summary>
-        <p>可以。<code>GET /api/tree</code> 與 <code>GET /api/search</code> 每帳號最多每兩秒比對一次磁碟與索引，外部修改不用重啟就會出現。唯一會出事的情況是：同一篇正在瀏覽器裡編輯時，外部改寫了它。</p>
+        <p>可以。<code>GET /api/tree</code> 與 <code>GET /api/search</code> 每帳號最多每兩秒比對一次磁碟與索引，外部修改不用重啟就會出現。同一篇在瀏覽器開著時若檔案被改寫，瀏覽器下次儲存會在改動位於不同位置時合併；若改到同一批行，瀏覽器的內容會另存成一份 <code>(conflict …)</code> 筆記，不會蓋掉外部那份。</p>
       </details>
       <details>
         <summary>真的完全不需要連外網嗎？</summary>
-        <p>頁面、樣式、編輯器 bundle 與所有圖示都同源，伺服器也送出 <code>default-src 'self'</code> 的 Content-Security-Policy。任何時刻都不會向 CDN、字體服務或圖示站台抓東西。</p>
+        <p>頁面、樣式、編輯器 bundle 與所有圖示都同源，伺服器送出同源的 Content-Security-Policy（<code>default-src 'self'</code>，另外允許 App 自己內嵌的樣式與腳本）。任何時刻都不會向 CDN、字體服務或圖示站台抓東西。</p>
       </details>
       <details>
         <summary>管理員忘記密碼怎麼辦？</summary>
@@ -311,6 +311,10 @@ docker compose -f docker-compose.ghcr.yml logs -f flownotes</code></pre>
       <details>
         <summary>要怎麼在前面放反向代理？</summary>
         <p>Caddy 兩行就好：<code>notes.example.com { reverse_proxy 127.0.0.1:8000 }</code>。nginx 則是 <code>proxy_pass http://127.0.0.1:8000;</code> 加 <code>proxy_set_header Host $host;</code>，並把 <code>client_max_body_size</code> 提到 21m 以上，否則 20 MB 的圖片上傳會被擋。不需要 WebSocket upgrade；把發布埠綁在 <code>127.0.0.1</code> 就能讓純 HTTP 不出現在網路上。兩種設定都寫在 DOCS.md。</p>
+      </details>
+      <details>
+        <summary>同一個帳號可以在多台裝置上同時編輯同一篇嗎？</summary>
+        <p>不行。Flow Notes 不支援同時編輯：沒有即時同步、沒有線上狀態、也沒有游標共享，兩台裝置無法可靠地同時在同一篇裡打字。存檔的版本檢查只是保底——改在不同位置會合併，改到同一批行時會保留一份、另一份另存為 <code>(conflict …)</code> 筆記——那是為了避免內容遺失，不是讓多裝置同時編輯成為支援的工作流程。正在編輯的筆記請一次只用一台裝置。</p>
       </details>
     </div>
   </div>
