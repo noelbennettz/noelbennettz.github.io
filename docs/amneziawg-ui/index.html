@@ -403,7 +403,7 @@ sysctl -w net.ipv4.ip_forward=1 \
       </details>
       <details>
         <summary>How do I update or move it?</summary>
-        <p>Update with <code>docker compose pull</code> then <code>docker compose up -d</code>; pin the dated tag instead of <code>latest</code> if you want upgrades to be a decision. To move, copy the <code>/etc/amnezia</code> volume to the new host and start the container there.</p>
+        <p>Update with <code>docker compose pull</code> then <code>docker compose up -d</code>. The package keeps only the newest build, so save the image you run now (<code>docker save</code>) if an upgrade has to wait. To move, copy the <code>/etc/amnezia</code> volume to the new host and start the container there.</p>
       </details>
       <details>
         <summary>Does it run on a small VPS or ARM?</summary>

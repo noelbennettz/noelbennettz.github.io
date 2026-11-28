@@ -399,7 +399,7 @@ sysctl -w net.ipv4.ip_forward=1 \
       </details>
       <details>
         <summary>怎麼更新或搬家？</summary>
-        <p>更新用 <code>docker compose pull</code> 再 <code>docker compose up -d</code>；想讓升級變成一個決定，就把 compose 裡的 tag 釘在日期版。搬家只要把 <code>/etc/amnezia</code> volume 複製到新主機再啟動。</p>
+        <p>更新用 <code>docker compose pull</code> 再 <code>docker compose up -d</code>。registry 只保留最新一次建置，所以升級要等就先把你現在跑的映像存下來（<code>docker save</code>）。搬家只要把 <code>/etc/amnezia</code> volume 複製到新主機再啟動。</p>
       </details>
       <details>
         <summary>小 VPS 或 ARM 跑得動嗎？</summary>
