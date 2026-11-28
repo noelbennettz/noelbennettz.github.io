@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AmneziaWG Web UI — a self-hosted VPN panel in one container</title>
-<meta name="description" content="A self-hosted AmneziaWG 3.1 admin panel in a ~35 MB Docker image. Create servers and clients, export .conf, QR codes and vpn:// links, and watch traffic. IPv4 and IPv6.">
+<meta name="description" content="A self-hosted AmneziaWG 3.1 admin panel in a ~41 MB Docker image. Create servers and clients, export .conf, QR codes and vpn:// links, and watch traffic. IPv4 and IPv6.">
 <meta name="theme-color" content="#0e0e11">
 <link rel="canonical" href="https://noelbennettz.github.io/amneziawg-ui/">
 <link rel="alternate" hreflang="zh-Hant" href="zh.html">
@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="style.css">
 <meta property="og:type" content="website">
 <meta property="og:title" content="AmneziaWG Web UI — your VPN, one container">
-<meta property="og:description" content="Self-hosted AmneziaWG 3.1 panel: servers, clients, QR codes, vpn:// links and live traffic. One ~35 MB Docker image, IPv4 + IPv6.">
+<meta property="og:description" content="Self-hosted AmneziaWG 3.1 panel: servers, clients, QR codes, vpn:// links and live traffic. One ~41 MB Docker image, IPv4 + IPv6.">
 <meta property="og:url" content="https://noelbennettz.github.io/amneziawg-ui/">
 <meta property="og:image" content="https://noelbennettz.github.io/amneziawg-ui/assets/dashboard.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -68,7 +68,7 @@
         disguised, so network filters do not recognise it as VPN traffic. The
         panel creates servers and clients, hands out a <code>.conf</code> file, a
         QR code or a <code>vpn://</code> link, and shows traffic live. One image
-        of about 35 MB; no Node, nginx or database.
+        of about 41 MB; no Node, nginx or database.
       </p>
       <div class="actions">
         <a class="btn btn-primary" href="#deploy">
@@ -84,7 +84,7 @@
         <span class="pill">AmneziaWG 3.1</span>
         <span class="pill">IPv4 + IPv6</span>
         <span class="pill">6 UI languages</span>
-        <span class="pill">~35 MB image</span>
+        <span class="pill">~41 MB image</span>
         <span class="pill">amd64 + arm64</span>
       </div>
     </div>
@@ -109,7 +109,7 @@
       <article class="card">
         <div class="icon"><svg aria-hidden="true"><use href="#i-box"/></svg></div>
         <h3>One container</h3>
-        <p>One image of about 35 MB. There is no Node, nginx, supervisor or separate database to run next to it.</p>
+        <p>One image of about 41 MB. There is no Node, nginx, supervisor or separate database to run next to it.</p>
       </article>
       <article class="card">
         <div class="icon"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
@@ -360,7 +360,7 @@ sysctl -w net.ipv4.ip_forward=1 \
       <div><dt>Image</dt><dd class="mono">ghcr.io/noelbennettz/amneziawg-ui</dd></div>
       <div><dt>Tags</dt><dd class="mono">latest, YYYY.MM.DD</dd></div>
       <div><dt>Platforms</dt><dd>linux/amd64, linux/arm64</dd></div>
-      <div><dt>Size</dt><dd>~35 MB compressed image</dd></div>
+      <div><dt>Size</dt><dd>~41 MB compressed image</dd></div>
       <div><dt>Backend</dt><dd>Go 1.26, Fiber</dd></div>
       <div><dt>Front end</dt><dd>Fyne v2.8, compiled to WebAssembly</dd></div>
       <div><dt>Ports</dt><dd><code>54845/tcp</code> panel, <code>54844/udp</code> default VPN server</dd></div>
@@ -368,6 +368,7 @@ sysctl -w net.ipv4.ip_forward=1 \
       <div><dt>Host needs</dt><dd>Docker + Compose, <code>/dev/net/tun</code>, <code>NET_ADMIN</code></dd></div>
       <div><dt>Languages</dt><dd>6 — English, Spanish, French, Russian, Simplified Chinese and Traditional Chinese</dd></div>
       <div><dt>License</dt><dd>AGPL-3.0</dd></div>
+      <div><dt>Origins</dt><dd>Started from <a href="https://github.com/mycelium-mesh/amneziawg-ui">mycelium-mesh/amneziawg-ui</a> (Apache-2.0), rewritten since</dd></div>
     </dl>
   </div>
 </section>
@@ -406,7 +407,7 @@ sysctl -w net.ipv4.ip_forward=1 \
       </details>
       <details>
         <summary>Does it run on a small VPS or ARM?</summary>
-        <p>The image is published for <code>amd64</code> and <code>arm64</code>, and the container itself is about 35 MB. The tunnel is userspace, so there is no kernel module to match against the host.</p>
+        <p>The image is published for <code>amd64</code> and <code>arm64</code>, and the container itself is about 41 MB. The tunnel is userspace, so there is no kernel module to match against the host.</p>
       </details>
       <details>
         <summary>What does the AGPL mean here?</summary>
