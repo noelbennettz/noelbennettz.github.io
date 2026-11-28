@@ -77,6 +77,10 @@ def read_palettes(path):
             declared = re.search(r"color-scheme\s*:\s*(light|dark)", body)
             base = declared.group(1) if declared else base
             scheme = base
+        elif ".entry" in selector:
+            # A row seed written without a theme prefix belongs to the scheme
+            # the page declares at the top (`.entry.hy2 { … }` is light).
+            scheme = base
         else:
             continue
         roles = dict((name, value) for name, value in ROLE.findall(body))

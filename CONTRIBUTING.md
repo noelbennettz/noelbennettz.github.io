@@ -12,6 +12,18 @@ own; their former URLs are served from this repository:
 Do not copy a project site back into its own repository. A page change is a pull
 request here.
 
+Index rows come in two shapes. A project with a page here links to it and shows a
+screenshot; a project with no page of its own (`headscale-wrapper`,
+`actions-openwrt-x86`) links straight to its GitHub repository, and the fourth
+cell holds the repository path in `.repo` instead of an image (`.repo` is hidden
+below 520px, where the row drops that column entirely). Both shapes seed a
+per-row `primary` in `docs/style.css`, once for light and once for dark;
+`check-contrast.py` fails either one below 4.5:1.
+
+`docs/about.html` and `docs/about.zh.html` are the only pages that are not an
+index or a project site. They reuse the index stylesheet and palette (`.prose`),
+so a colour change there is a change to `docs/style.css` like any other.
+
 ## Before opening a pull request
 
 ```sh
@@ -24,7 +36,7 @@ shfmt -i 2 -d scripts/*.sh && shellcheck scripts/*.sh
 
 ## Design system
 
-All five sites share `docs/m3.css`: Material 3 roles for colour, shape, motion
+All the pages share `docs/m3.css`: Material 3 roles for colour, shape, motion
 and type, plus the top-bar controls (`.theme-toggle`, `.nav .lang`), the button
 components and `.visually-hidden`. Each page links it before its own
 `style.css` and seeds the colour roles there, once for light and once for dark.

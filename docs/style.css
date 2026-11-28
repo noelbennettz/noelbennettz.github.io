@@ -62,6 +62,12 @@
 :root[data-theme="dark"] .entry.amnezia { --md-sys-color-primary: #ff9a4d; }
 :root[data-theme="dark"] .entry.imail { --md-sys-color-primary: #7aa7ff; }
 :root[data-theme="dark"] .entry.flownotes { --md-sys-color-primary: #b9cde3; }
+/* Two rows have no page of their own and point straight at the repository, so
+   they carry no screenshot; their colour still follows the row. */
+.entry.headscale { --md-sys-color-primary: #6a3fbf; --accent: var(--md-sys-color-primary); }
+.entry.openwrt { --md-sys-color-primary: #0e6b66; --accent: var(--md-sys-color-primary); }
+:root[data-theme="dark"] .entry.headscale { --md-sys-color-primary: #c3a7ff; }
+:root[data-theme="dark"] .entry.openwrt { --md-sys-color-primary: #7fd6cd; }
 
 html { scroll-behavior: smooth; }
 
@@ -215,6 +221,17 @@ h1 em {
 .entry:active {
   background-color: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
 }
+/* A repository-only row has no screenshot, so the fourth cell carries the
+   repository path instead of an image. The columns stay where the header puts
+   them, which is why these rows need no grid of their own. */
+.repo {
+  color: var(--md-sys-color-on-surface-variant);
+  font-family: var(--mono);
+  font-size: var(--md-sys-type-label-sm-size);
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  overflow-wrap: break-word;
+}
 
 .num {
   color: var(--accent);
@@ -233,6 +250,10 @@ h1 em {
   max-width: 520px;
   color: var(--md-sys-color-on-surface-variant);
   font-size: 0.88rem;
+}
+.copy code {
+  font-family: var(--mono);
+  font-size: 0.94em;
 }
 .stack {
   color: var(--md-sys-color-on-surface-variant);
@@ -299,8 +320,37 @@ h1 em {
 }
 .site-footer p { margin: 0; max-width: 560px; }
 
+/* About: the index look, one narrow column of prose. Kept here rather than in a
+   second stylesheet so it inherits the palette and the contrast checks. */
+
+.about-head { grid-template-columns: 1fr; padding-bottom: 8px; }
+.prose {
+  width: min(100% - 48px, var(--max));
+  margin: 16px auto 72px;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+/* Paragraphs start on the same left edge as the heading, but keep a measure
+   that is comfortable to read. */
+.prose p { margin: 0 0 1.1em; max-width: 40rem; }
+.prose a {
+  color: var(--md-sys-color-on-surface);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.prose a:hover { color: var(--md-sys-color-primary); }
+.prose code {
+  font-family: var(--mono);
+  font-size: 0.92em;
+}
+
 @media (max-width: 1020px) {
   .list-head, .entry { grid-template-columns: 36px 1fr 160px 22px; }
+  /* The stack cells are gone and the fourth column is now the screenshot, so
+     its heading would sit over the wrong column. */
+  .list-head .h-stack, .list-head .h-site { display: none; }
   .stack { display: none; }
   .shot { width: 160px; height: 96px; }
 }
@@ -314,6 +364,7 @@ h1 em {
 }
 @media (max-width: 520px) {
   .container { width: min(100% - 32px, var(--max)); }
+  .prose { width: min(100% - 32px, 40rem); }
   .brand span { display: none; }
   .nav {
     flex-wrap: nowrap;
@@ -337,6 +388,8 @@ h1 em {
     padding-block: 18px;
     align-items: start;
   }
+  .entry.noshot { grid-template-columns: 24px 1fr 18px; }
+  .repo { display: none; }
   .num { padding-top: 3px; }
   .arrow { padding-top: 1px; }
   .shot { width: 60px; height: 40px; }

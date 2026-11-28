@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>noelbennettz — 開源網路軟體</title>
-<meta name="description" content="三個開源專案的索引：Hy2droid（Android 的 Hysteria 2 用戶端）、AmneziaWG Web UI（自架 Docker 面板）與 iMail（自有網域的郵件伺服器）。">
+<meta name="description" content="開源專案的索引：Android 的 Hysteria 2 用戶端、自架的 AmneziaWG 面板、自有網域的郵件伺服器、Markdown 筆記伺服器、headscale CLI 的名稱包裝，以及用官方原始碼編的 OpenWrt x86/64 映像。">
 <meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e0e10" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="style.css">
 <meta property="og:type" content="website">
 <meta property="og:title" content="noelbennettz — 開源網路軟體">
-<meta property="og:description" content="Android 的 Hysteria 2 用戶端、自架的 AmneziaWG 面板，以及自有網域的郵件伺服器。">
+<meta property="og:description" content="Android 的 Hysteria 2 用戶端、自架的 AmneziaWG 面板、自有網域的郵件伺服器、Markdown 筆記伺服器、headscale CLI 包裝與 OpenWrt 映像建置。">
 <meta property="og:url" content="https://noelbennettz.github.io/zh.html">
 <meta property="og:image" content="https://noelbennettz.github.io/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -31,6 +31,7 @@
       noelbennettz <span>Index</span>
     </a>
     <nav class="nav" aria-label="主要導覽">
+      <a href="about.zh.html">關於</a>
       <a href="https://github.com/noelbennettz">GitHub ↗</a>
       <button class="theme-toggle" type="button" aria-pressed="false">夜間</button>
       <a class="lang" href="index.html" hreflang="en" lang="en">English</a>
@@ -47,16 +48,16 @@
   </div>
   <p class="lede">
     下面每個專案都是開源，跑在自己控制的機器上。每一列寫了它做什麼、需要準備什麼，
-    點進去看專案自己的頁面——從符合你需求的那一個開始。
+    點進去看專案自己的頁面——沒有獨立頁面的，就連到它的倉庫。從符合你需求的那一個開始。
   </p>
 </section>
 
 <section class="list container" aria-label="專案">
   <div class="list-head">
-    <span>編號</span>
-    <span>專案</span>
-    <span>技術</span>
-    <span>官網</span>
+    <span class="h-num">編號</span>
+    <span class="h-project">專案</span>
+    <span class="h-stack">技術</span>
+    <span class="h-site">官網／倉庫</span>
     <span></span>
   </div>
 
@@ -101,6 +102,28 @@
     </span>
     <span class="stack">筆記<br>Python · Docker<br>MIT</span>
     <span class="shot"><img class="pos-note" src="assets/shot-flownotes.png" alt="Flow Notes 編輯畫面" width="180" height="108" loading="lazy"></span>
+    <span class="arrow" aria-hidden="true">↗</span>
+  </a>
+
+  <a class="entry headscale noshot" href="https://github.com/noelbennettz/headscale-wrapper">
+    <span class="num">05</span>
+    <span class="copy">
+      <h2>hs</h2>
+      <p>headscale CLI 的包裝，把 <code>--identifier &lt;id&gt;</code> 換成打得出來的名字：<code>hs show laptop</code>、<code>hs expire phone</code>、<code>hs route add gw 10.0.0.0/8</code>。bash 加 jq，沒有常駐程式、沒有設定檔，自己不留狀態——每個指令讀完 headscale 就結束。需要 jq 與 headscale 在同一台機器上。</p>
+    </span>
+    <span class="stack">headscale<br>Bash · jq<br>MIT</span>
+    <span class="repo">github.com/<wbr>noelbennettz/<wbr>headscale-wrapper</span>
+    <span class="arrow" aria-hidden="true">↗</span>
+  </a>
+
+  <a class="entry openwrt noshot" href="https://github.com/noelbennettz/actions-openwrt-x86">
+    <span class="num">06</span>
+    <span class="copy">
+      <h2>OpenWrt x86</h2>
+      <p>從官方原始碼在 GitHub Actions 上編出 x86/64 的 OpenWrt 25.12 映像，整份設定就是一個 <code>.diffconfig</code>：Passwall 加 sing-box 與 Hysteria 2、七種語言、92 個網路驅動。每次執行把映像同時留成 artefact 與 release。本機什麼都不用裝——fork、跑 workflow、把映像寫進磁碟。</p>
+    </span>
+    <span class="stack">OpenWrt<br>Actions<br>MIT</span>
+    <span class="repo">github.com/<wbr>noelbennettz/<wbr>actions-openwrt-x86</span>
     <span class="arrow" aria-hidden="true">↗</span>
   </a>
 </section>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>noelbennettz — open-source network software</title>
-<meta name="description" content="An index of open-source projects: Hy2droid (Hysteria 2 for Android), AmneziaWG Web UI (self-hosted Docker panel), iMail (mail server for your own domains) and Flow Notes (self-hosted Markdown notes).">
+<meta name="description" content="An index of open-source projects: a Hysteria 2 client for Android, a self-hosted AmneziaWG panel, a mail server for your own domains, a Markdown note server, a name-based wrapper for the headscale CLI and an OpenWrt x86/64 image built from official source.">
 <meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e0e10" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="style.css">
 <meta property="og:type" content="website">
 <meta property="og:title" content="noelbennettz — open-source network software">
-<meta property="og:description" content="An Android Hysteria 2 client, a self-hosted AmneziaWG panel, a mail server and a self-hosted Markdown note server.">
+<meta property="og:description" content="An Android Hysteria 2 client, a self-hosted AmneziaWG panel, a mail server, a Markdown note server, a headscale CLI wrapper and an OpenWrt image builder.">
 <meta property="og:url" content="https://noelbennettz.github.io/">
 <meta property="og:image" content="https://noelbennettz.github.io/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -31,6 +31,7 @@
       noelbennettz <span>Index</span>
     </a>
     <nav class="nav" aria-label="Main">
+      <a href="about.html">About</a>
       <a href="https://github.com/noelbennettz">GitHub ↗</a>
       <button class="theme-toggle" type="button" aria-pressed="false">Dark</button>
       <a class="lang" href="zh.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
@@ -48,16 +49,17 @@
   <p class="lede">
     Every project below is open source and runs on hardware you control. Each
     row says what it does and what it needs, and the link leads to the project's
-    own page — start with the one that matches what you are trying to do.
+    own page — or, where it has none, to its repository. Start with the one that
+    matches what you are trying to do.
   </p>
 </section>
 
 <section class="list container" aria-label="Projects">
   <div class="list-head">
-    <span>No.</span>
-    <span>Project</span>
-    <span>Stack</span>
-    <span>Site</span>
+    <span class="h-num">No.</span>
+    <span class="h-project">Project</span>
+    <span class="h-stack">Stack</span>
+    <span class="h-site">Site / repo</span>
     <span></span>
   </div>
 
@@ -102,6 +104,28 @@
     </span>
     <span class="stack">Notes<br>Python · Docker<br>MIT</span>
     <span class="shot"><img class="pos-note" src="assets/shot-flownotes.png" alt="Flow Notes editor" width="180" height="108" loading="lazy"></span>
+    <span class="arrow" aria-hidden="true">↗</span>
+  </a>
+
+  <a class="entry headscale noshot" href="https://github.com/noelbennettz/headscale-wrapper">
+    <span class="num">05</span>
+    <span class="copy">
+      <h2>hs</h2>
+      <p>A wrapper around the headscale CLI that turns <code>--identifier &lt;id&gt;</code> into names you can type: <code>hs show laptop</code>, <code>hs expire phone</code>, <code>hs route add gw 10.0.0.0/8</code>. Bash and jq, no daemon, no config file, and no state of its own — every command reads what it needs from headscale and exits. Needs jq and the headscale binary on the same server.</p>
+    </span>
+    <span class="stack">headscale<br>Bash · jq<br>MIT</span>
+    <span class="repo">github.com/<wbr>noelbennettz/<wbr>headscale-wrapper</span>
+    <span class="arrow" aria-hidden="true">↗</span>
+  </a>
+
+  <a class="entry openwrt noshot" href="https://github.com/noelbennettz/actions-openwrt-x86">
+    <span class="num">06</span>
+    <span class="copy">
+      <h2>OpenWrt x86</h2>
+      <p>An OpenWrt 25.12 image for x86/64 built from official sources on GitHub Actions, with the whole configuration in one <code>.diffconfig</code>: Passwall with sing-box and Hysteria 2, seven languages, 92 network drivers. A run publishes the images as an artefact and a release. Nothing to install locally — fork it, run the workflow, write the image to disk.</p>
+    </span>
+    <span class="stack">OpenWrt<br>Actions<br>MIT</span>
+    <span class="repo">github.com/<wbr>noelbennettz/<wbr>actions-openwrt-x86</span>
     <span class="arrow" aria-hidden="true">↗</span>
   </a>
 </section>
